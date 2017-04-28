@@ -1,0 +1,19 @@
+{
+    "name": "popy/republican-calendar",
+    "description": "Republican calendar library",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Pierre Dudoret",
+            "email": "pierre.dudoret@potogan.fr"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Popy\\RepublicanCalendar\\": "src/",
+            "Popy\\RepublicanCalendar\\Tests\\": "tests/"
+        }
+    }
+}
