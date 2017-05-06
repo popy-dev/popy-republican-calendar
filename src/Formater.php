@@ -7,16 +7,16 @@ class Formater
     /**
      * Locale (used for day & month names)
      *
-     * @var Locale
+     * @var LocaleInterface
      */
     protected $locale;
 
     /**
      * Class constructor.
      *
-     * @param Locale $locale
+     * @param LocaleInterface $locale
      */
-    public function __construct(Locale $locale)
+    public function __construct(LocaleInterface $locale)
     {
         $this->locale = $locale;
     }

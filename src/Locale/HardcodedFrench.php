@@ -2,9 +2,9 @@
 
 namespace Popy\RepublicanCalendar\Locale;
 
-use Popy\RepublicanCalendar\Locale;
+use Popy\RepublicanCalendar\LocaleInterface;
 
-class HardcodedFrench implements Locale
+class HardcodedFrench implements LocaleInterface
 {
     /**
      * {@inheritDoc}

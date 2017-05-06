@@ -13,7 +13,7 @@ class FormaterTest extends PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock()
         ;
-        $locale = $this->getMock('Popy\RepublicanCalendar\Locale');
+        $locale = $this->getMock('Popy\RepublicanCalendar\LocaleInterface');
         $formater = new Formater($locale);
 
         $input
@@ -71,7 +71,7 @@ class FormaterTest extends PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock()
         ;
-        $locale = $this->getMock('Popy\RepublicanCalendar\Locale');
+        $locale = $this->getMock('Popy\RepublicanCalendar\LocaleInterface');
         $formater = new Formater($locale);
 
         $input

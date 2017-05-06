@@ -4,12 +4,12 @@ namespace Popy\RepublicanCalendar\Converter;
 
 use DateTime;
 use Popy\RepublicanCalendar\Date;
-use Popy\RepublicanCalendar\Converter;
+use Popy\RepublicanCalendar\ConverterInterface;
 
 /**
  * Republican Date <=> DateTime converter interface.
  */
-class Basic implements Converter
+class Basic implements ConverterInterface
 {
     /**
      * {@inheritDoc}

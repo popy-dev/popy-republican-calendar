@@ -2,7 +2,7 @@
 
 namespace Popy\RepublicanCalendar;
 
-interface Locale
+interface LocaleInterface
 {
     /**
      * Get month name.

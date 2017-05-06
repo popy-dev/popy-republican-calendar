@@ -7,7 +7,7 @@ use DateTime;
 /**
  * Republican Date <=> DateTime converter interface.
  */
-interface Converter
+interface ConverterInterface
 {
     /**
      * Converts a DateTime to a Republican Date.
