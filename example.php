@@ -2,7 +2,7 @@
 
 require 'quickstart.php';
 
-$preset = new \Popy\RepublicanCalendar\PresetFormater($formater, 'l jS F Y, D', 'F, D, Y');
+$preset = new \Popy\RepublicanCalendar\PresetFormater($formater, 'l jS F y, D', 'F, D, y');
 
 // Sans-culottide day (actually the revolution day, as it's a leap day)
 echo $preset->format($converter->toRepublican(new DateTime('2016-09-21'))) . chr(10);

@@ -32,7 +32,7 @@ class Formater
     public function format(Date $input, $format, $sansCulottideFormat = null)
     {
         $symbols = array(
-            'Y', 'L',
+            'y', 'Y', 'L',
             'F', 'm', 'n', 't',
             'd', 'j', 'l', 'S', 'w', 'z', 'N', 'D',
             'W'
@@ -76,6 +76,10 @@ class Formater
      */
     public function getSymbolValue(Date $input, $symbol)
     {
+        if ($symbol === 'y') {
+            return $this->decimalToRoman($input->getYear());
+        }
+
         if ($symbol === 'Y') {
             return $input->getYear();
         }
@@ -154,4 +158,42 @@ class Formater
             return $this->getSymbolValue($input, 'z') % 10;
         }
     }
+
+    /**
+     * Converts an integer to its roman version.
+     * 
+     * @param integer $input
+     *
+     * @return string
+     */
+    public function decimalToRoman($input) 
+    { 
+        $table = array(
+            'M'  => 1000,
+            'CM' => 900,
+            'D'  => 500,
+            'CD' => 400,
+            'C'  => 100,
+            'XC' => 90,
+            'L'  => 50,
+            'XL' => 40,
+            'X'  => 10,
+            'IX' => 9,
+            'V'  => 5,
+            'IV' => 4,
+            'I'  => 1
+        ); 
+        $res = '';
+
+
+        foreach ($table as $symbol => $value) {
+            while ($input >= $value) {
+                $res .= $symbol;
+                $input -= $value;
+            }
+        }
+
+        return $res;
+    } 
+
 }
