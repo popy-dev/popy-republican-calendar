@@ -25,6 +25,12 @@ class Date
      */
     protected $day;
 
+    /**
+     * Leap year flag.
+     *
+     * @var boolean
+     */
+    protected $leap;
 
     /**
      * Class constructor.
@@ -33,11 +39,12 @@ class Date
      * @param integer $month
      * @param integer $day
      */
-    public function __construct($year, $month, $day)
+    public function __construct($year, $month, $day, $isLeapYear = false)
     {
         $this->year = $year;
         $this->month = $month;
         $this->day = $day;
+        $this->leap = $isLeapYear;
     }
 
     /**
@@ -68,6 +75,16 @@ class Date
     public function getDay()
     {
         return $this->day;
+    }
+
+    /**
+     * Is a leap year.
+     * 
+     * @return boolean
+     */
+    public function isLeap()
+    {
+        return $this->leap;
     }
 }
 

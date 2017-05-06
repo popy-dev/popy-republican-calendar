@@ -31,7 +31,7 @@ class Basic implements Converter
         $month = intval($dayIndex / 30);
         $day = $dayIndex % 30;
 
-        return new Date($year, $month + 1, $day + 1);
+        return new Date($year, $month + 1, $day + 1, $gregorianLeap);
     }
 
     /**
