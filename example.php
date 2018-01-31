@@ -2,8 +2,10 @@
 
 require 'quickstart.php';
 
-$preset = new \Popy\RepublicanCalendar\PresetFormater($formater, 'l jS F y, D|F, D, y');
-$greg = new \Popy\RepublicanCalendar\PresetFormater($gregorian, 'Y-m-d');
+$gregorian = new \Popy\Calendar\Calendar\GregorianCalendar();
+
+$preset = new \Popy\Calendar\PresetFormater($formater, 'l jS F y, D|F, D, y');
+$greg = new \Popy\Calendar\PresetFormater($gregorian, 'Y-m-d');
 
 $dates = [
     // Sans-culottide day (actually the revolution day, as it's a leap year)

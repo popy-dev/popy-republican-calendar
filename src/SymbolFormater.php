@@ -2,6 +2,8 @@
 
 namespace Popy\RepublicanCalendar;
 
+use Popy\RepublicanCalendar\Locale\HardcodedFrench as DefaultLocale;
+
 class SymbolFormater
 {
     /**
@@ -28,13 +30,13 @@ class SymbolFormater
     /**
      * Class constructor.
      *
-     * @param LocaleInterface $locale
-     * @param RomanConverter  $converter
+     * @param LocaleInterface|null $locale
+     * @param RomanConverter|null  $converter
      */
-    public function __construct(LocaleInterface $locale, RomanConverter $converter)
+    public function __construct(LocaleInterface $locale = null, RomanConverter $converter = null)
     {
-        $this->locale = $locale;
-        $this->converter = $converter;
+        $this->locale = $locale ?: new DefaultLocale();
+        $this->converter = $converter ?: new RomanConverter();
     }
 
     public function handles($symbol)
@@ -133,5 +135,7 @@ class SymbolFormater
             // Numéro de semaine dans l'année
             return $this->format($input, 'z') % 10;
         }
+
+        return $symbol;
     }
 }

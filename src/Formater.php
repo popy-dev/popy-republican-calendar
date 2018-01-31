@@ -1,13 +1,12 @@
 <?php
 
-namespace Popy\RepublicanCalendar\Formater;
+namespace Popy\RepublicanCalendar;
 
 use DateTimeInterface;
-use Popy\RepublicanCalendar\SymbolFormater;
-use Popy\RepublicanCalendar\FormaterInterface;
-use Popy\RepublicanCalendar\ConverterInterface;
+use Popy\Calendar\FormaterInterface;
+use Popy\RepublicanCalendar\Converter\Basic as BasicConverter;
 
-class RepublicanCalendar implements FormaterInterface
+class Formater implements FormaterInterface
 {
     /**
      * Symbol Formater
@@ -17,7 +16,7 @@ class RepublicanCalendar implements FormaterInterface
     protected $formater;
 
     /**
-     * Date converter
+     * Date converter.
      *
      * @var ConverterInterface
      */
@@ -26,13 +25,13 @@ class RepublicanCalendar implements FormaterInterface
     /**
      * Class constructor.
      *
-     * @param SymbolFormater $formater
-     * @param ConverterInterface $converter
+     * @param SymbolFormater|null     $formater
+     * @param ConverterInterface|null $converter
      */
-    public function __construct(SymbolFormater $formater, ConverterInterface $converter)
+    public function __construct(SymbolFormater $formater = null, ConverterInterface $converter = null)
     {
-        $this->formater = $formater;
-        $this->converter = $converter;
+        $this->formater = $formater ?: new SymbolFormater();
+        $this->converter = $converter ?: new BasicConverter();
     }
 
     /**
