@@ -18,6 +18,13 @@ class SymbolFormater
      */
     protected $converter;
 
+    static protected $symbols = array(
+        'y', 'Y', 'L',
+        'F', 'm', 'n', 't',
+        'd', 'j', 'l', 'S', 'w', 'z', 'N', 'D',
+        'W'
+    );
+
     /**
      * Class constructor.
      *
@@ -28,6 +35,11 @@ class SymbolFormater
     {
         $this->locale = $locale;
         $this->converter = $converter;
+    }
+
+    public function handles($symbol)
+    {
+        return in_array($symbol, static::$symbols);
     }
 
     /**
