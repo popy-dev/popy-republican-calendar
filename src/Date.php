@@ -10,55 +10,88 @@ use DateTimeInterface;
 class Date
 {
     /**
-     * Republican year.
-     * 
+     * Original/Real DateTime object.
+     *
+     * @var DateTimeInterface
+     */
+    protected $datetime;
+
+    
+    /**
+     * Year
+     *
      * @var integer
      */
     protected $year;
-
+    
     /**
-     * Republican month.
+     * Month
      *
      * @var integer
      */
     protected $month;
-
+    
     /**
-     * Republican day.
-     * 
-     * @var integer.
+     * Day
+     *
+     * @var integer
      */
     protected $day;
-
+    
     /**
-     * Leap year flag.
+     * Day Index
      *
-     * @var boolean
+     * @var integer
      */
-    protected $leap;
-
+    protected $dayIndex;
+    
     /**
-     * Original DateTime.
+     * Hours
      *
-     * @var DateTimeInterface|null
+     * @var integer
      */
-    protected $datetime;
-
+    protected $hour;
+    
     /**
-     * Class constructor.
+     * Minutes
      *
-     * @param integer                $year
-     * @param integer                $month
-     * @param integer                $day
-     * @param DateTimeInterface|null $datetime
+     * @var integer
      */
-    public function __construct($year, $month, $day, $isLeapYear = false, DateTimeInterface $datetime = null)
+    protected $minute;
+    
+    /**
+     * Seconds
+     *
+     * @var integer
+     */
+    protected $second;
+
+    public function __construct($year, $dayIndex, $isLeap, $hour, $minute, $second, $microsecond, DateTimeInterface $datetime = null)
     {
         $this->year = $year;
-        $this->month = $month;
-        $this->day = $day;
-        $this->leap = $isLeapYear;
+        $this->dayIndex = $dayIndex;
+        $this->leap = $isLeap;
+
+        $this->month = intval($dayIndex / 30) + 1;
+        $this->day = $dayIndex % 30 + 1;
+
+        $this->hour = $hour;
+        $this->minute = $minute;
+        $this->second = $second;
+        $this->microsecond = $microsecond;
+
+        // To be removed
         $this->datetime = $datetime;
+    }
+
+    /**
+     * Gets the internal DateTime object.
+     *
+     * @return DateTimeInterface
+     */
+    public function getDateTime()
+    {
+        return $this->datetime;
     }
 
     /**
@@ -92,6 +125,16 @@ class Date
     }
 
     /**
+     * Gets the Republican day index.
+     *
+     * @return integer.
+     */
+    public function getDayIndex()
+    {
+        return $this->dayIndex;
+    }
+
+    /**
      * Is a leap year.
      * 
      * @return boolean
@@ -102,13 +145,43 @@ class Date
     }
 
     /**
-     * Gets the internal DateTime object.
+     * Gets the Republican hour.
      *
-     * @return DateTimeInterface|null
+     * @return integer.
      */
-    public function getDateTime()
+    public function getHour()
     {
-        return $this->datetime;
+        return $this->hour;
+    }
+
+    /**
+     * Gets the Republican minute.
+     *
+     * @return integer.
+     */
+    public function getMinute()
+    {
+        return $this->minute;
+    }
+
+    /**
+     * Gets the Republican second.
+     *
+     * @return integer.
+     */
+    public function getSecond()
+    {
+        return $this->second;
+    }
+
+    /**
+     * Get Republican microsecond.
+     *
+     * @return integer
+     */
+    public function getMicrosecond()
+    {
+        return $this->microsecond;
     }
 }
 

@@ -1,13 +1,20 @@
 <?php
 
-require 'quickstart.php';
+require './vendor/autoload.php';
 
-$gregorian = new \Popy\Calendar\Calendar\GregorianCalendar();
+use Popy\RepublicanCalendar\Formater;
+use Popy\Calendar\Calendar\GregorianCalendar;
+use Popy\RepublicanCalendar\Converter;
 
-$preset = new \Popy\Calendar\PresetFormater($formater, 'l jS F y, D|F, D, y');
-$greg = new \Popy\Calendar\PresetFormater($gregorian, 'Y-m-d');
+$format = 'l jS F y, D|F, D, y';
+$format = 'l jS F Y, D|F, D, y';
+
+$basic = new \Popy\Calendar\PresetFormater(new Formater(), $format);
+$romme = new \Popy\Calendar\PresetFormater(new Formater(null, $converter = new Converter\Romme()), $format);
+$gregorian = new \Popy\Calendar\PresetFormater(new GregorianCalendar(), 'Y-m-d');
 
 $dates = [
+    new DateTime('1811-09-23'),
     // Sans-culottide day (actually the revolution day, as it's a leap year)
     new DateTime('2016-09-21'),
 
@@ -22,5 +29,13 @@ $dates = [
 ];
 
 foreach ($dates as $date) {
-    echo $greg->format($date) . ' -> ' . $preset->format($date) . chr(10);
+    echo $gregorian->format($date) . ' -> ' . str_pad($basic->format($date), 60, ' ') . ' ..vs.. ' . $romme->format($date) . chr(10);
+}
+
+echo '---'.chr(10).chr(10);
+
+$gregorian = new \Popy\Calendar\PresetFormater(new GregorianCalendar(), 'Y-m-d H:i:s');
+
+foreach ($dates as $date) {
+    echo $gregorian->format($date) . ' -> ' . $gregorian->format($converter->fromRepublican($converter->toRepublican($date))) . chr(10);
 }

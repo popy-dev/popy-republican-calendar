@@ -28,10 +28,7 @@ class Basic implements ConverterInterface
             $year++;
         }
 
-        $month = intval($dayIndex / 30);
-        $day = $dayIndex % 30;
-
-        return new Date($year, $month + 1, $day + 1, $gregorianLeap, $input);
+        return new Date($year, $dayIndex, $gregorianLeap, 0, 0, 0, $input);
     }
 
     /**
