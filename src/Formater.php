@@ -12,13 +12,6 @@ class Formater implements FormaterInterface
     use FormatLexerTrait;
 
     /**
-     * Symbol Formater
-     *
-     * @var SymbolFormater
-     */
-    protected $formater;
-
-    /**
      * Date converter.
      *
      * @var ConverterInterface
@@ -26,15 +19,22 @@ class Formater implements FormaterInterface
     protected $converter;
 
     /**
+     * Symbol Formater
+     *
+     * @var SymbolFormater
+     */
+    protected $formater;
+
+    /**
      * Class constructor.
      *
      * @param SymbolFormater|null     $formater
      * @param ConverterInterface|null $converter
      */
-    public function __construct(SymbolFormater $formater = null, ConverterInterface $converter = null)
+    public function __construct(ConverterInterface $converter = null, SymbolFormater $formater = null)
     {
-        $this->formater = $formater ?: new SymbolFormater();
         $this->converter = $converter ?: new TimeConverter();
+        $this->formater  = $formater  ?: new SymbolFormater();
     }
 
     /**
