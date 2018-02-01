@@ -3,7 +3,7 @@
 namespace Popy\RepublicanCalendar\Converter;
 
 use DateTimeInterface;
-use Popy\RepublicanCalendar\Date;
+use Popy\RepublicanCalendar\RepublicanDateTime;
 use Popy\RepublicanCalendar\ConverterInterface;
 
 /**
@@ -28,13 +28,13 @@ class Basic implements ConverterInterface
             $year++;
         }
 
-        return new Date($year, $dayIndex, $gregorianLeap, 0, 0, 0, $input);
+        return new RepublicanDateTime($year, $dayIndex, $gregorianLeap, 0, 0, 0, $input);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function fromRepublican(Date $input)
+    public function fromRepublican(RepublicanDateTime $input)
     {
         return $input->getDateTime();
     }

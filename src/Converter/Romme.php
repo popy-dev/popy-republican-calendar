@@ -5,7 +5,7 @@ namespace Popy\RepublicanCalendar\Converter;
 use DateTimeZone;
 use DateTimeImmutable;
 use DateTimeInterface;
-use Popy\RepublicanCalendar\Date;
+use Popy\RepublicanCalendar\RepublicanDateTime;
 use Popy\RepublicanCalendar\ConverterInterface;
 
 /**
@@ -88,7 +88,7 @@ class Romme implements ConverterInterface
 
         $time = $this->toRepublicanTime($input);
 
-        return new Date($year, $dayIndex, $leap, $time[0], $time[1], $time[2], $time[3], $input);
+        return new RepublicanDateTime($year, $dayIndex, $leap, $time[0], $time[1], $time[2], $time[3], $input);
     }
 
     /**
@@ -110,7 +110,7 @@ class Romme implements ConverterInterface
     /**
      * {@inheritDoc}
      */
-    public function fromRepublican(Date $input)
+    public function fromRepublican(RepublicanDateTime $input)
     {
         $frenchEraEnd = $this->getRevolutionEraEnd($input->getTimezone());
 
@@ -175,11 +175,11 @@ class Romme implements ConverterInterface
     /**
      * Converts a republican time (H:i:s) into a regular time (as array).
      *
-     * @param Date $input
+     * @param RepublicanDateTime $input
      *
      * @return array [hours, minutes, seconds]
      */
-    public function fromRepublicanTime(Date $input)
+    public function fromRepublicanTime(RepublicanDateTime $input)
     {
         $dayFraction = $this->getDayFractionFromTime(
             [$input->getHour(), $input->getMinute(), $input->getSecond(), $input->getMicrosecond()],

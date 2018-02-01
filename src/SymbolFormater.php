@@ -35,15 +35,15 @@ class SymbolFormater
     /**
      * Get a date-format symbol formatted result.
      *
-     * @param Date   $input  Input date.
-     * @param string $symbol Symbol.
+     * @param RepublicanDateTime $input  Input date.
+     * @param string             $symbol Symbol.
      * 
      * Supported symbols : same as date() with :
      *  - D symbol added to match day individual name
      *
      * @return string|null
      */
-    public function format(Date $input, $symbol)
+    public function format(RepublicanDateTime $input, $symbol)
     {
         if ($symbol === 'y') {
             return $this->converter->decimalToRoman($input->getYear());

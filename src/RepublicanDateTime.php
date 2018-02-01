@@ -8,7 +8,7 @@ use DateTimeInterface;
 /**
  * Republican date value object, for internal use.
  */
-class Date
+class RepublicanDateTime
 {
     /**
      * Original/Real DateTime object.
@@ -17,7 +17,6 @@ class Date
      */
     protected $datetime;
 
-    
     /**
      * Year
      *

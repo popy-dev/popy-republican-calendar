@@ -14,16 +14,16 @@ interface ConverterInterface
      * 
      * @param DateTime $input
      * 
-     * @return Date
+     * @return RepublicanDateTime
      */
     public function toRepublican(DateTimeInterface $input);
 
     /**
      * Converts a Republican Date into a DateTimeInterface
      * 
-     * @param Date $input
+     * @param RepublicanDateTime $input
      * 
      * @return DateTimeInterface
      */
-    public function fromRepublican(Date $input);
+    public function fromRepublican(RepublicanDateTime $input);
 }
