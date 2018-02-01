@@ -14,7 +14,7 @@ interface TimeConverterInterface
      *
      * @param DateTimeInterface $input
      *
-     * @return array [hours, minutes, seconds, microseconds]
+     * @return array<int> [hours, minutes, seconds, microseconds]
      */
     public function toRepublicanTime(DateTimeInterface $input);
 
@@ -23,7 +23,7 @@ interface TimeConverterInterface
      *
      * @param RepublicanDateTime $input
      *
-     * @return array [hours, minutes, seconds, microseconds]
+     * @return array<int> [hours, minutes, seconds, microseconds]
      */
     public function fromRepublicanTime(RepublicanDateTime $input);
 }

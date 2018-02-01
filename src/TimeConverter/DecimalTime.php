@@ -20,6 +20,20 @@ class DecimalTime implements TimeConverterInterface
     protected $converter;
 
     /**
+     * Decimal time parts ranges.
+     *
+     * @var array<int>
+     */
+    static $decimalRanges = [10, 100, 100, 1000000];
+
+    /**
+     * Duodecimal time parts ranges.
+     *
+     * @var array<int>
+     */
+    static $duoDecimalRanges = [24, 60, 60, 1000000];
+
+    /**
      * Class constructor.
      *
      * @param TimeConverter|null $converter Time conversion utility.
@@ -38,8 +52,8 @@ class DecimalTime implements TimeConverterInterface
 
         return $this->converter->convertTime(
             [$hour, $min, $seconds, $micro],
-            [24, 60, 60, 1000000],
-            [10, 100, 100, 1000000]
+            static::$duoDecimalRanges,
+            static::$decimalRanges
         );
     }
 
@@ -49,9 +63,14 @@ class DecimalTime implements TimeConverterInterface
     public function fromRepublicanTime(RepublicanDateTime $input)
     {
         return $this->converter->convertTime(
-            [$input->getHour(), $input->getMinute(), $input->getSecond(), $input->getMicrosecond()],
-            [10, 100, 100, 1000000],
-            [24, 60, 60, 1000000]
+            [
+                $input->getHour(),
+                $input->getMinute(),
+                $input->getSecond(),
+                $input->getMicrosecond(),
+            ],
+            static::$decimalRanges,
+            static::$duoDecimalRanges
         );
     }
 }

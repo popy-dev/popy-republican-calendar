@@ -2,6 +2,7 @@
 
 namespace Popy\RepublicanCalendar\Utility;
 
+// TODO : Split into interface & 2 implementations
 class TimeConverter
 {
     /**
@@ -9,11 +10,11 @@ class TimeConverter
      *     from one format (defined by constituents sizes) into another format
      *     (defined by constituents sizes).
      *
-     * @param array $timeParts           Time constituents array.
-     * @param array $sourceFractionSizes Source time constituants ranges.
-     * @param array $targetFractionSizes Target time constituants ranges.
+     * @param array<int> $timeParts           Time constituents array.
+     * @param array<int> $sourceFractionSizes Source time constituants ranges.
+     * @param array<int> $targetFractionSizes Target time constituants ranges.
      * 
-     * @return array
+     * @return array<int>
      */
     public function convertTime(array $timeParts, array $sourceFractionSizes, array $targetFractionSizes)
     {
@@ -26,11 +27,11 @@ class TimeConverter
      *     from one format (defined by constituents sizes) into another format
      *     (defined by constituents sizes) using a fraction of day calculation.
      *
-     * @param array $timeParts           Time constituents array.
-     * @param array $sourceFractionSizes Source time constituants ranges.
-     * @param array $targetFractionSizes Target time constituants ranges.
+     * @param array<int> $timeParts           Time constituents array.
+     * @param array<int> $sourceFractionSizes Source time constituants ranges.
+     * @param array<int> $targetFractionSizes Target time constituants ranges.
      * 
-     * @return array
+     * @return array<int>
      */
     public function convertTimeWithDayFraction(array $timeParts, array $sourceFractionSizes, array $targetFractionSizes)
     {
@@ -44,8 +45,8 @@ class TimeConverter
      * Converts a "Time" (represented by an array of each of its constituents)
      *     into a fraction of a day, based on the constituents ranges.
      * 
-     * @param array $timeParts     Time constituents array.
-     * @param array $fractionSizes Time constituants ranges.
+     * @param array<int> $timeParts     Time constituents array.
+     * @param array<int> $fractionSizes Time constituants ranges.
      *
      * @return float
      */
@@ -67,9 +68,9 @@ class TimeConverter
      *     its constituents) based on the constituents ranges.
      *
      * @param float $dayFraction   Day fraction.
-     * @param array $fractionSizes Time constituants ranges.
+     * @param array<int> $fractionSizes Time constituants ranges.
      *
-     * @return array
+     * @return array<int>
      */
     public function getTimeFromDayFraction($dayFraction, array $fractionSizes)
     {
@@ -116,11 +117,11 @@ class TimeConverter
      *     (defined by constituents sizes) using a "lower unity count ratio"
      *     calculation.
      *
-     * @param array $timeParts           Time constituents array.
-     * @param array $sourceFractionSizes Source time constituants ranges.
-     * @param array $targetFractionSizes Target time constituants ranges.
+     * @param array<int> $timeParts           Time constituents array.
+     * @param array<int> $sourceFractionSizes Source time constituants ranges.
+     * @param array<int> $targetFractionSizes Target time constituants ranges.
      * 
-     * @return array
+     * @return array<int>
      */
     public function convertTimeWithLowerUnityCountRatio(array $timeParts, array $sourceFractionSizes, array $targetFractionSizes)
     {
@@ -142,8 +143,8 @@ class TimeConverter
      *     into the lowest of its defined units (usefull if you want, for
      *     instance, to convert a [h,m,s,u] into seconds)
      * 
-     * @param array $timeParts     Time constituents array.
-     * @param array $fractionSizes Time constituants ranges.
+     * @param array<int> $timeParts     Time constituents array.
+     * @param array<int> $fractionSizes Time constituants ranges.
      *
      * @return integer
      */
