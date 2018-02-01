@@ -2,9 +2,9 @@
 
 namespace Popy\RepublicanCalendar\Converter;
 
-use DateTime;
+use DateTimeZone;
+use DateTimeImmutable;
 use DateTimeInterface;
-use BadMethodCallException;
 use Popy\RepublicanCalendar\Date;
 use Popy\RepublicanCalendar\ConverterInterface;
 
@@ -15,12 +15,31 @@ use Popy\RepublicanCalendar\ConverterInterface;
  */
 class Romme implements ConverterInterface
 {
+    const REVOLUTION_ERA_END = '1811-09-23 00:00:00';
+    const REVOLUTION_ERA_END_FORMAT = 'Y-m-d H:i:s';
+
+    /**
+     * Instanciates a RevolutionEraEnd date for the given DateTimeZone
+     *
+     * @param DateTimeZone $timezone
+     *
+     * @return DateTimeImmutable
+     */
+    protected function getRevolutionEraEnd(DateTimeZone $timezone)
+    {
+        return DateTimeImmutable::createFromFormat(
+            static::REVOLUTION_ERA_END_FORMAT,
+            static::REVOLUTION_ERA_END,
+            $timezone
+        );
+    }
+
     /**
      * {@inheritDoc}
      */
     public function toRepublican(DateTimeInterface $input)
     {
-        $frenchEraEnd = DateTime::createFromFormat('Y-m-d H:i:s', '1811-09-23 00:00:00', $input->getTimezone());
+        $frenchEraEnd = $this->getRevolutionEraEnd($input->getTimezone());
 
         // Time elapsed between the end of the French calendar and the given
         // date. We have to include the daylight savings offset, because back in
@@ -49,7 +68,7 @@ class Romme implements ConverterInterface
 
         // The end of the French calendar system was the beginning of the year
         // 20.
-        $fakeEndFrenchEraTimestamp = DateTime::createFromFormat(
+        $fakeEndFrenchEraTimestamp = DateTimeImmutable::createFromFormat(
             'Y-m-d H:i:s',
             '2020-01-01 00:00:00',
             $input->getTimezone()
@@ -59,8 +78,8 @@ class Romme implements ConverterInterface
         $fakeFrenchTimestamp = $fakeEndFrenchEraTimestamp + $numSecondsSinceEndOfFrenchEra;
 
         // Create a calendar object for the French date
-        $fakeFrenchDate = new DateTime('now', $input->getTimezone());
-        $fakeFrenchDate->setTimeStamp($fakeFrenchTimestamp);
+        $fakeFrenchDate = new DateTimeImmutable('now', $input->getTimezone());
+        $fakeFrenchDate = $fakeFrenchDate->setTimeStamp($fakeFrenchTimestamp);
 
         // Extract the year, leap and day in year from the French date.
         list($year, $leap, $dayIndex) = explode('-', $fakeFrenchDate->format('Y-L-z'));
@@ -93,7 +112,8 @@ class Romme implements ConverterInterface
      */
     public function fromRepublican(Date $input)
     {
-        $frenchEraEnd = DateTime::createFromFormat('Y-m-d H:i:s', '1811-09-23 00:00:00'/*, $input->getTimezone()*/);
+        $frenchEraEnd = $this->getRevolutionEraEnd($input->getTimezone());
+
         $time = $this->fromRepublicanTime($input);
 
         // Create a fake calendar object (fake because this is not really a
@@ -101,20 +121,20 @@ class Romme implements ConverterInterface
         // This was in the French year 20. Since in the Gregorian year 20, there
         // were no leap years yet, we add 2000 to the year, so that the
         // Gregorian calendar implementation can handle the leap years.
-        $fakeEndFrenchEraEndCalendar = DateTime::createFromFormat(
+        $fakeEndFrenchEraEndCalendar = DateTimeImmutable::createFromFormat(
             'Y-m-d H:i:s',
-            '2020-01-01 00:00:00'
-            //$input->getTimezone()
+            '2020-01-01 00:00:00',
+            $input->getTimezone()
         );
 
         // Create a fake calendar object for the given French date
-        $fakeFrenchCalendar = DateTime::createFromFormat(
+        $fakeFrenchCalendar = DateTimeImmutable::createFromFormat(
             'Y-m-d H:i:s',
             sprintf(
                 '%s-01-01 00:00:00',
                 2000 + $input->getYear()
-            )
-            //$input->getTimezone()
+            ),
+            $input->getTimezone()
         );
 
         if ($input->getDayIndex()) {
@@ -124,23 +144,29 @@ class Romme implements ConverterInterface
             ));
         }
 
-        // Determine how much time passed since the end of the French calendar (its year 20, Gregorian year 1811) and the given French date
+        // Determine how much time passed since the end of the French calendar
+        //    (its year 20, Gregorian year 1811) and the given French date
         $numSecondsSinceEndOfFrenchEra =
             $fakeFrenchCalendar->getTimestamp() + $fakeFrenchCalendar->format('Z')
             - $fakeEndFrenchEraEndCalendar->getTimestamp() - $fakeEndFrenchEraEndCalendar->format('Z')
         ;
 
-        // Create the Gregorian calendar object starting with 1811 and adding this time passed
-        $result = DateTime::createFromFormat(
+        // Create the Gregorian calendar object starting with 1811 and adding
+        //    this time passed
+        $result = DateTimeImmutable::createFromFormat(
             'U.u',
             sprintf(
                 '%s.%s',
                 $frenchEraEnd->getTimestamp() + $numSecondsSinceEndOfFrenchEra,
                 $time[3]
-            )
-            /*, $input->getTimezone()*/
+            ),
+            $input->getTimezone()
         );
 
+        // We could have added the getLowerUnityCountFromTime() result to the
+        //    previously calculated timestamp, by I'm not quite sure that the
+        //    calculated timestamp will always start at 00:00:00 because of
+        //    day light savings.
         $result = $result->setTime($time[0], $time[1], $time[2]);
 
         return $result;
@@ -167,24 +193,45 @@ class Romme implements ConverterInterface
      * Converts a "Time" (represented by an array of each of its constituents)
      *     into a fraction of a day, based on the constituents ranges.
      * 
-     * @param array  $timeParts     Time constituents array.
-     * @param array  $fractionSizes Time constituants ranges.
+     * @param array $timeParts     Time constituents array.
+     * @param array $fractionSizes Time constituants ranges.
      *
      * @return float
      */
     protected function getDayFractionFromTime(array $timeParts, array $fractionSizes)
     {
-        if (count($timeParts) !== count($fractionSizes)) {
-            throw new BadMethodCallException('timeParts and fractionSizes arguments must have the same length !');
-        }
-
+        $len = count($fractionSizes);
         $fraction = 0;
 
-        for ($i=count($timeParts) - 1; $i > -1; $i--) { 
-            $fraction = ($fraction + $timeParts[$i]) / $fractionSizes[$i];
+        for ($i = count($timeParts) - 1; $i > -1; $i--) {
+            $part = isset($timeParts[$i]) ? $timeParts[$i] : 0;
+            $fraction = ($fraction + $part) / $fractionSizes[$i];
         }
 
         return $fraction;
+    }
+
+    /**
+     * Converts a "Time" (represented by an array of each of its constituents)
+     *     into the lowest of its defined units (usefull if you want, for
+     *     instance, to convert a [h,m,s,u] into seconds)
+     * 
+     * @param array $timeParts     Time constituents array.
+     * @param array $fractionSizes Time constituants ranges.
+     *
+     * @return integer
+     */
+    protected function getLowerUnityCountFromTime(array $timeParts, array $fractionSizes)
+    {
+        $len = count($fractionSizes);
+        $res = 0;
+   
+        for ($i=0; $i < $len; $i++) {
+            $part = isset($timeParts[$i]) ? $timeParts[$i] : 0;
+            $res = $res * $fractionSizes[$i] + $part;
+        }
+
+        return $res;
     }
 
     /**

@@ -8,6 +8,11 @@ https://en.wikipedia.org/wiki/French_Republican_Calendar
 
 Date convertors are inspired from [caarmen's work](https://github.com/caarmen/french-revolutionary-calendar).
 
+The dates conversion usually take into account DateTimeZone, and daylight
+savings offset, which are keeped as regular hour jumps, at the same dates/hours
+than with regular dates. Which is stupid. But aren't daylight savings stupid
+anyway ?
+
 Usage
 -----
 

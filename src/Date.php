@@ -2,6 +2,7 @@
 
 namespace Popy\RepublicanCalendar;
 
+use DateTimeZone;
 use DateTimeInterface;
 
 /**
@@ -182,6 +183,16 @@ class Date
     public function getMicrosecond()
     {
         return $this->microsecond;
+    }
+
+    /**
+     * Gets timezone.
+     *
+     * @return DateTimeZone
+     */
+    public function getTimezone()
+    {
+        return $this->datetime->getTimezone();
     }
 }
 
