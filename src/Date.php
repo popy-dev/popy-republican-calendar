@@ -2,6 +2,9 @@
 
 namespace Popy\RepublicanCalendar;
 
+/**
+ * Republican date value object, for internal use.
+ */
 class Date
 {
     /**
