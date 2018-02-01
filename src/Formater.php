@@ -4,10 +4,13 @@ namespace Popy\RepublicanCalendar;
 
 use DateTimeInterface;
 use Popy\Calendar\FormaterInterface;
+use Popy\Calendar\Formater\FormatLexerTrait;
 use Popy\RepublicanCalendar\Converter\Basic as BasicConverter;
 
 class Formater implements FormaterInterface
 {
+    use FormatLexerTrait;
+
     /**
      * Symbol Formater
      *
@@ -43,43 +46,29 @@ class Formater implements FormaterInterface
      */
     public function format(DateTimeInterface $input, $format)
     {
-        $rep = $this->converter->toRepublican($input);
+        return $this->doFormat(
+            $this->converter->toRepublican($input),
+            $format
+        );
+    }
 
-        $string = str_split($format, 1);
-        $skipNext = false;
-        $res = '';
+    /**
+     * @inheritDoc
+     */
+    protected function formatSymbol(&$res, $input, $symbol)
+    {
+        if ($symbol !== '|') {
+            $res .= $this->formater->format($input, $symbol);
 
-        foreach ($string as $k => $v) {
-            if ($skipNext) {
-                $skipNext = false;
-                $res .= $v;
-                continue;
-            }
-
-            if ($v === '\\') {
-                $skipNext = true;
-                continue;
-            }
-
-            if ($v === '|') {
-                // Normal format / sans-culottide format separator
-                if ($rep->getMonth() === 13) {
-                    // Reset formated date and continue
-                    $res = '';
-                    continue;
-                } else {
-                    break;
-                }
-            }
-
-            if (!$this->formater->handles($v)) {
-                $res .= $input->format($v);
-                continue;
-            }
-
-            $res .= $this->formater->format($rep, $v);
+            return true;
         }
 
-        return $res;
+        if ($input->getMonth() !== 13) {
+            return false;
+        }
+
+        // Reset formated date and continue
+        $res = '';
+        return true;
     }
 }

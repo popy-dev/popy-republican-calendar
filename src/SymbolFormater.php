@@ -136,6 +136,10 @@ class SymbolFormater
             return $this->format($input, 'z') % 10;
         }
 
+        if ($input->getDateTime() !== null) {
+            return $input->getDateTime()->format($symbol);
+        }
+
         return $symbol;
     }
 }

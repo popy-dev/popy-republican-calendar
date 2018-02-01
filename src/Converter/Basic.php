@@ -2,19 +2,19 @@
 
 namespace Popy\RepublicanCalendar\Converter;
 
-use DateTime;
+use DateTimeInterface;
 use Popy\RepublicanCalendar\Date;
 use Popy\RepublicanCalendar\ConverterInterface;
 
 /**
- * Republican Date <=> DateTime converter interface.
+ * Republican Date <=> DateTimeInterface converter interface.
  */
 class Basic implements ConverterInterface
 {
     /**
      * {@inheritDoc}
      */
-    public function toRepublican(DateTime $input)
+    public function toRepublican(DateTimeInterface $input)
     {
         list($gregorianYear, $gregorianLeap, $dayIndex) = explode('-', $input->format('Y-L-z'));
 
@@ -31,7 +31,7 @@ class Basic implements ConverterInterface
         $month = intval($dayIndex / 30);
         $day = $dayIndex % 30;
 
-        return new Date($year, $month + 1, $day + 1, $gregorianLeap);
+        return new Date($year, $month + 1, $day + 1, $gregorianLeap, $input);
     }
 
     /**
@@ -39,6 +39,6 @@ class Basic implements ConverterInterface
      */
     public function fromRepublican(Date $input)
     {
-
+        return $input->getDateTime();
     }
 }

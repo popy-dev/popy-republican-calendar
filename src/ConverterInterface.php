@@ -2,7 +2,7 @@
 
 namespace Popy\RepublicanCalendar;
 
-use DateTime;
+use DateTimeInterface;
 
 /**
  * Republican Date <=> DateTime converter interface.
@@ -16,14 +16,14 @@ interface ConverterInterface
      * 
      * @return Date
      */
-    public function toRepublican(DateTime $input);
+    public function toRepublican(DateTimeInterface $input);
 
     /**
-     * Converts a Republican Date into a standard DateTime
+     * Converts a Republican Date into a DateTimeInterface
      * 
      * @param Date $input
      * 
-     * @return DateTime
+     * @return DateTimeInterface
      */
     public function fromRepublican(Date $input);
 }

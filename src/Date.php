@@ -2,6 +2,8 @@
 
 namespace Popy\RepublicanCalendar;
 
+use DateTimeInterface;
+
 /**
  * Republican date value object, for internal use.
  */
@@ -36,18 +38,27 @@ class Date
     protected $leap;
 
     /**
+     * Original DateTime.
+     *
+     * @var DateTimeInterface|null
+     */
+    protected $datetime;
+
+    /**
      * Class constructor.
      *
-     * @param integer $year
-     * @param integer $month
-     * @param integer $day
+     * @param integer                $year
+     * @param integer                $month
+     * @param integer                $day
+     * @param DateTimeInterface|null $datetime
      */
-    public function __construct($year, $month, $day, $isLeapYear = false)
+    public function __construct($year, $month, $day, $isLeapYear = false, DateTimeInterface $datetime = null)
     {
         $this->year = $year;
         $this->month = $month;
         $this->day = $day;
         $this->leap = $isLeapYear;
+        $this->datetime = $datetime;
     }
 
     /**
@@ -88,6 +99,16 @@ class Date
     public function isLeap()
     {
         return $this->leap;
+    }
+
+    /**
+     * Gets the internal DateTime object.
+     *
+     * @return DateTimeInterface|null
+     */
+    public function getDateTime()
+    {
+        return $this->datetime;
     }
 }
 
