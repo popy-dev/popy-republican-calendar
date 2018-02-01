@@ -10,8 +10,8 @@ Date convertors are inspired from [caarmen's work](https://github.com/caarmen/fr
 
 The dates conversion usually take into account DateTimeZone, and daylight
 savings offset, which are keeped as regular hour jumps, at the same dates/hours
-than with regular dates. Which is stupid. But aren't daylight savings stupid
-anyway ?
+than with regular dates, which gives constistency in a day.
+But aren't daylight savings stupid anyway ?
 
 Usage
 -----

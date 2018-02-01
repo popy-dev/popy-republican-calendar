@@ -8,6 +8,8 @@ use Popy\RepublicanCalendar\ConverterInterface;
 
 /**
  * Initial (bad) converter implementation.
+ *
+ * Does not handle time, so better wrap it with TimeConverter.
  */
 class Basic implements ConverterInterface
 {
@@ -28,7 +30,7 @@ class Basic implements ConverterInterface
             $year++;
         }
 
-        return new RepublicanDateTime($year, $dayIndex, $gregorianLeap, 0, 0, 0, $input);
+        return new RepublicanDateTime($year, $dayIndex, $gregorianLeap, $input);
     }
 
     /**

@@ -11,6 +11,8 @@ use Popy\RepublicanCalendar\ConverterInterface;
 /**
  * Romme implementation, adapted from caarmen's implementation
  *
+ * Does not handle time (by design), so better wrap it with TimeConverter.
+ *
  * @link https://github.com/caarmen/french-revolutionary-calendar
  */
 class Romme implements ConverterInterface
@@ -86,25 +88,7 @@ class Romme implements ConverterInterface
 
         $year = $year - 2000;
 
-        $time = $this->toRepublicanTime($input);
-
-        return new RepublicanDateTime($year, $dayIndex, $leap, $time[0], $time[1], $time[2], $time[3], $input);
-    }
-
-    /**
-     * Converts a regular time (H:i:s) into a republican time (as array).
-     *
-     * @param DateTimeInterface $input
-     *
-     * @return array [hours, minutes, seconds]
-     */
-    public function toRepublicanTime(DateTimeInterface $input)
-    {
-        list($hour, $min, $seconds, $micro) = explode(':', $input->format('H:i:s:u'));
-
-        $dayFraction = $this->getDayFractionFromTime([$hour, $min, $seconds, $micro], [24, 60, 60, 1000000]);
-
-        return $this->getTimeFromDayFraction($dayFraction, [10, 100, 100, 1000000]);
+        return new RepublicanDateTime($year, $dayIndex, $leap, $input);
     }
 
     /**
@@ -113,8 +97,6 @@ class Romme implements ConverterInterface
     public function fromRepublican(RepublicanDateTime $input)
     {
         $frenchEraEnd = $this->getRevolutionEraEnd($input->getTimezone());
-
-        $time = $this->fromRepublicanTime($input);
 
         // Create a fake calendar object (fake because this is not really a
         // Gregorian date), corresponding to the end of the French calendar era.
@@ -154,131 +136,11 @@ class Romme implements ConverterInterface
         // Create the Gregorian calendar object starting with 1811 and adding
         //    this time passed
         $result = DateTimeImmutable::createFromFormat(
-            'U.u',
-            sprintf(
-                '%s.%s',
-                $frenchEraEnd->getTimestamp() + $numSecondsSinceEndOfFrenchEra,
-                $time[3]
-            ),
+            'U',
+            $frenchEraEnd->getTimestamp() + $numSecondsSinceEndOfFrenchEra,
             $input->getTimezone()
         );
 
-        // We could have added the getLowerUnityCountFromTime() result to the
-        //    previously calculated timestamp, by I'm not quite sure that the
-        //    calculated timestamp will always start at 00:00:00 because of
-        //    day light savings.
-        $result = $result->setTime($time[0], $time[1], $time[2]);
-
         return $result;
-    }
-
-    /**
-     * Converts a republican time (H:i:s) into a regular time (as array).
-     *
-     * @param RepublicanDateTime $input
-     *
-     * @return array [hours, minutes, seconds]
-     */
-    public function fromRepublicanTime(RepublicanDateTime $input)
-    {
-        $dayFraction = $this->getDayFractionFromTime(
-            [$input->getHour(), $input->getMinute(), $input->getSecond(), $input->getMicrosecond()],
-            [10, 100, 100, 1000000]
-        );
-
-        return $this->getTimeFromDayFraction($dayFraction, [24, 60, 60, 1000000]);
-    }
-
-    /**
-     * Converts a "Time" (represented by an array of each of its constituents)
-     *     into a fraction of a day, based on the constituents ranges.
-     * 
-     * @param array $timeParts     Time constituents array.
-     * @param array $fractionSizes Time constituants ranges.
-     *
-     * @return float
-     */
-    protected function getDayFractionFromTime(array $timeParts, array $fractionSizes)
-    {
-        $len = count($fractionSizes);
-        $fraction = 0;
-
-        for ($i = count($timeParts) - 1; $i > -1; $i--) {
-            $part = isset($timeParts[$i]) ? $timeParts[$i] : 0;
-            $fraction = ($fraction + $part) / $fractionSizes[$i];
-        }
-
-        return $fraction;
-    }
-
-    /**
-     * Converts a "Time" (represented by an array of each of its constituents)
-     *     into the lowest of its defined units (usefull if you want, for
-     *     instance, to convert a [h,m,s,u] into seconds)
-     * 
-     * @param array $timeParts     Time constituents array.
-     * @param array $fractionSizes Time constituants ranges.
-     *
-     * @return integer
-     */
-    protected function getLowerUnityCountFromTime(array $timeParts, array $fractionSizes)
-    {
-        $len = count($fractionSizes);
-        $res = 0;
-   
-        for ($i=0; $i < $len; $i++) {
-            $part = isset($timeParts[$i]) ? $timeParts[$i] : 0;
-            $res = $res * $fractionSizes[$i] + $part;
-        }
-
-        return $res;
-    }
-
-    /**
-     * Converts a dayFraction onto a "Time" (represented by an array of each of
-     *     its constituents) based on the constituents ranges.
-     *
-     * @param float $dayFraction   Day fraction.
-     * @param array $fractionSizes Time constituants ranges.
-     *
-     * @return array
-     */
-    protected function getTimeFromDayFraction($dayFraction, array $fractionSizes)
-    {
-        $res = [];
-        $len = count($fractionSizes);
-
-        for ($i=0; $i < $len; $i++) { 
-            $dayFraction = $dayFraction * $fractionSizes[$i];
-
-            if ($i + 1 < $len) { 
-                $dayFraction = $dayFraction - ($res[] = (int)$dayFraction);
-            } else {
-                // Rounding last value to avoid loosing data
-                $res[] = round($dayFraction);
-            }
-        }
-
-        for ($i=$len-1; $i > -1 ; $i--) { 
-            if ($res[$i] < $fractionSizes[$i]) {
-                // everything is fine.
-                break;
-            }
-
-            // A rounding got us over limit
-            if ($i) {
-                $res[$i] -= $fractionSizes[$i];
-                $res[$i-1]++;
-            }
-        }
-
-        // Possible issue : the heaviest time component could have reached it's
-        // upper limit, reaching the next day. It could cause an issue depending
-        // on how the time is set in the final object.
-        // 
-        // Usually this issue will only happen if reconverting a Republican date
-        // into a conventional Date, and native implementations handle it well.
-
-        return $res;
     }
 }

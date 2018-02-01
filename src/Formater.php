@@ -5,7 +5,7 @@ namespace Popy\RepublicanCalendar;
 use DateTimeInterface;
 use Popy\Calendar\FormaterInterface;
 use Popy\Calendar\Formater\FormatLexerTrait;
-use Popy\RepublicanCalendar\Converter\Romme as RommeConverter;
+use Popy\RepublicanCalendar\Converter\TimeConverter;
 
 class Formater implements FormaterInterface
 {
@@ -34,7 +34,7 @@ class Formater implements FormaterInterface
     public function __construct(SymbolFormater $formater = null, ConverterInterface $converter = null)
     {
         $this->formater = $formater ?: new SymbolFormater();
-        $this->converter = $converter ?: new RommeConverter();
+        $this->converter = $converter ?: new TimeConverter();
     }
 
     /**

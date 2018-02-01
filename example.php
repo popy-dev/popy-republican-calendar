@@ -4,12 +4,13 @@ require './vendor/autoload.php';
 
 use Popy\RepublicanCalendar\Formater;
 use Popy\Calendar\Calendar\GregorianCalendar;
-use Popy\RepublicanCalendar\Converter;
+use Popy\RepublicanCalendar\Converter\TimeConverter;
 
 $format = 'l jS F y H:i:s, D|F, D, y H:i:s';
 //$format = 'Y-m-d H:i:s D';
 
-$romme = new \Popy\Calendar\PresetFormater(new Formater(null, $converter = new Converter\Romme()), $format);
+$converter = new TimeConverter();
+$romme = new \Popy\Calendar\PresetFormater(new Formater(), $format);
 $gregorian = new \Popy\Calendar\PresetFormater(new GregorianCalendar(), 'Y-m-d H:i:s');
 
 $dates = [
@@ -28,5 +29,6 @@ $dates = [
 ];
 
 foreach ($dates as $date) {
-    echo $gregorian->format($date) . ' -> ' . $romme->format($date) . chr(10);
+    $date2 = $converter->fromRepublican($converter->toRepublican($date));
+    echo $gregorian->format($date) . ' <=> ' . $gregorian->format($date2) . ' -> ' . $romme->format($date) . chr(10);
 }

@@ -50,23 +50,30 @@ class RepublicanDateTime
      *
      * @var integer
      */
-    protected $hour;
+    protected $hour = 0;
     
     /**
      * Minutes
      *
      * @var integer
      */
-    protected $minute;
+    protected $minute = 0;
     
     /**
      * Seconds
      *
      * @var integer
      */
-    protected $second;
+    protected $second = 0;
 
-    public function __construct($year, $dayIndex, $isLeap, $hour, $minute, $second, $microsecond, DateTimeInterface $datetime = null)
+    /**
+     * Microseconds
+     *
+     * @var integer
+     */
+    protected $microseconds = 0;
+
+    public function __construct($year, $dayIndex, $isLeap, DateTimeInterface $datetime = null)
     {
         $this->year = $year;
         $this->dayIndex = $dayIndex;
@@ -75,13 +82,26 @@ class RepublicanDateTime
         $this->month = intval($dayIndex / 30) + 1;
         $this->day = $dayIndex % 30 + 1;
 
+        // To be removed
+        $this->datetime = $datetime;
+    }
+
+    /**
+     * Set time information.
+     *
+     * @param integer $hour        Hours.
+     * @param integer $minute      Minutes.
+     * @param integer $second      Seconds.
+     * @param integer $microsecond Microseconds.
+     */
+    public function setTime($hour, $minute = 0, $second = 0, $microsecond = 0)
+    {
         $this->hour = $hour;
         $this->minute = $minute;
         $this->second = $second;
         $this->microsecond = $microsecond;
 
-        // To be removed
-        $this->datetime = $datetime;
+        return $this;
     }
 
     /**
