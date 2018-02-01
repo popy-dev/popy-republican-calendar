@@ -93,6 +93,9 @@ class Romme implements ConverterInterface
      */
     public function fromRepublican(Date $input)
     {
+        $frenchEraEnd = DateTime::createFromFormat('Y-m-d H:i:s', '1811-09-23 00:00:00'/*, $input->getTimezone()*/);
+        $time = $this->fromRepublicanTime($input);
+
         // Create a fake calendar object (fake because this is not really a
         // Gregorian date), corresponding to the end of the French calendar era.
         // This was in the French year 20. Since in the Gregorian year 20, there
@@ -127,17 +130,18 @@ class Romme implements ConverterInterface
             - $fakeEndFrenchEraEndCalendar->getTimestamp() - $fakeEndFrenchEraEndCalendar->format('Z')
         ;
 
-        $frenchEraEnd = DateTime::createFromFormat('Y-m-d H:i:s', '1811-09-23 00:00:00'/*, $input->getTimezone()*/);
-
-        $time = $this->fromRepublicanTime($input);
         // Create the Gregorian calendar object starting with 1811 and adding this time passed
-        $result = new DateTime(/*'now', $input->getTimezone()*/);
-        $result = $result->setTimeStamp($frenchEraEnd->getTimestamp() + $numSecondsSinceEndOfFrenchEra);
+        $result = DateTime::createFromFormat(
+            'U.u',
+            sprintf(
+                '%s.%s',
+                $frenchEraEnd->getTimestamp() + $numSecondsSinceEndOfFrenchEra,
+                $time[3]
+            )
+            /*, $input->getTimezone()*/
+        );
 
-        $result = DateTime::createFromFormat('U.u', '1811-09-23 00:00:00'/*, $input->getTimezone()*/);
-
-
-        $result = $result->setTime($time[0], $time[1], $time[2], $time[3]);
+        $result = $result->setTime($time[0], $time[1], $time[2]);
 
         return $result;
     }
@@ -195,13 +199,38 @@ class Romme implements ConverterInterface
     protected function getTimeFromDayFraction($dayFraction, array $fractionSizes)
     {
         $res = [];
+        $len = count($fractionSizes);
 
-        for ($i=0; $i < count($fractionSizes); $i++) { 
+        for ($i=0; $i < $len; $i++) { 
             $dayFraction = $dayFraction * $fractionSizes[$i];
-            $dayFraction = $dayFraction - ($res[] = (int)$dayFraction);
+
+            if ($i + 1 < $len) { 
+                $dayFraction = $dayFraction - ($res[] = (int)$dayFraction);
+            } else {
+                // Rounding last value to avoid loosing data
+                $res[] = round($dayFraction);
+            }
         }
 
-        var_dump('Lost : ' . $dayFraction);
+        for ($i=$len-1; $i > -1 ; $i--) { 
+            if ($res[$i] < $fractionSizes[$i]) {
+                // everything is fine.
+                break;
+            }
+
+            // A rounding got us over limit
+            if ($i) {
+                $res[$i] -= $fractionSizes[$i];
+                $res[$i-1]++;
+            }
+        }
+
+        // Possible issue : the heaviest time component could have reached it's
+        // upper limit, reaching the next day. It could cause an issue depending
+        // on how the time is set in the final object.
+        // 
+        // Usually this issue will only happen if reconverting a Republican date
+        // into a conventional Date, and native implementations handle it well.
 
         return $res;
     }

@@ -6,6 +6,8 @@ Republican/Revolutionary calendar.
 
 https://en.wikipedia.org/wiki/French_Republican_Calendar
 
+Date convertors are inspired from [caarmen's work](https://github.com/caarmen/french-revolutionary-calendar).
+
 Usage
 -----
 

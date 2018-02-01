@@ -6,12 +6,11 @@ use Popy\RepublicanCalendar\Formater;
 use Popy\Calendar\Calendar\GregorianCalendar;
 use Popy\RepublicanCalendar\Converter;
 
-$format = 'l jS F y, D|F, D, y';
-$format = 'l jS F Y, D|F, D, y';
+$format = 'l jS F y H:i:s, D|F, D, y H:i:s';
+//$format = 'Y-m-d H:i:s D';
 
-$basic = new \Popy\Calendar\PresetFormater(new Formater(), $format);
 $romme = new \Popy\Calendar\PresetFormater(new Formater(null, $converter = new Converter\Romme()), $format);
-$gregorian = new \Popy\Calendar\PresetFormater(new GregorianCalendar(), 'Y-m-d');
+$gregorian = new \Popy\Calendar\PresetFormater(new GregorianCalendar(), 'Y-m-d H:i:s');
 
 $dates = [
     new DateTime('1811-09-23'),
@@ -29,13 +28,5 @@ $dates = [
 ];
 
 foreach ($dates as $date) {
-    echo $gregorian->format($date) . ' -> ' . str_pad($basic->format($date), 60, ' ') . ' ..vs.. ' . $romme->format($date) . chr(10);
-}
-
-echo '---'.chr(10).chr(10);
-
-$gregorian = new \Popy\Calendar\PresetFormater(new GregorianCalendar(), 'Y-m-d H:i:s');
-
-foreach ($dates as $date) {
-    echo $gregorian->format($date) . ' -> ' . $gregorian->format($converter->fromRepublican($converter->toRepublican($date))) . chr(10);
+    echo $gregorian->format($date) . ' -> ' . $romme->format($date) . chr(10);
 }

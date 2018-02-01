@@ -20,13 +20,6 @@ class SymbolFormater
      */
     protected $converter;
 
-    static protected $symbols = array(
-        'y', 'Y', 'L',
-        'F', 'm', 'n', 't',
-        'd', 'j', 'l', 'S', 'w', 'z', 'N', 'D',
-        'W'
-    );
-
     /**
      * Class constructor.
      *
@@ -39,16 +32,14 @@ class SymbolFormater
         $this->converter = $converter ?: new RomanConverter();
     }
 
-    public function handles($symbol)
-    {
-        return in_array($symbol, static::$symbols);
-    }
-
     /**
      * Get a date-format symbol formatted result.
      *
      * @param Date   $input  Input date.
      * @param string $symbol Symbol.
+     * 
+     * Supported symbols : same as date() with :
+     *  - D symbol added to match day individual name
      *
      * @return string|null
      */
@@ -93,7 +84,7 @@ class SymbolFormater
 
         if ($symbol === 'd') {
             // Jour du mois, sur deux chiffres (avec un zéro initial)
-            return substr('0' . $input->getDay(), -2);;
+            return substr('0' . $input->getDay(), -2);
         }
 
         if ($symbol === 'j') {
@@ -108,7 +99,7 @@ class SymbolFormater
 
         if ($symbol === 'D') {
             // Jour de la semaine, textuel, version longue
-            return $this->locale->getDayName($this->format($input, 'z'));
+            return $this->locale->getDayName($input->getDayIndex());
         }
 
         if ($symbol === 'S') {
@@ -123,7 +114,7 @@ class SymbolFormater
 
         if ($symbol === 'z') {
             // Jour de l'année
-            return $input->getMonth() * 30 + $input->getDay() - 30 - 1;
+            return $input->getDayIndex();
         }
 
         if ($symbol === 'N') {
@@ -136,8 +127,101 @@ class SymbolFormater
             return $this->format($input, 'z') % 10;
         }
 
-        if ($input->getDateTime() !== null) {
-            return $input->getDateTime()->format($symbol);
+        if ($symbol === 'a' || $symbol === 'A') {
+            // a   Lowercase Ante meridiem and Post meridiem   am or pm
+            // A   Uppercase Ante meridiem and Post meridiem   AM or PM
+            return '';
+        }
+
+        if ($symbol === 'B') {
+            // B   Swatch Internet time    000 through 999
+            return $input->getHour() * 100 + $input->getMinute();
+        }
+
+        if ($symbol === 'g' || $symbol === 'G') {
+            // g   12-hour format of an hour without leading zeros 1 through 12
+            // G   24-hour format of an hour without leading zeros 0 through 23
+            return $input->getHour();
+        }
+
+        if ($symbol === 'h' || $symbol === 'H') {
+            // h   12-hour format of an hour with leading zeros    01 through 12
+            // H   24-hour format of an hour with leading zeros    00 through 23
+            return substr('0' . $input->getHour(), -2);
+        }
+
+        if ($symbol === 'i') {
+            // i   Minutes with leading zeros  00 to 59
+            return substr('0' . $input->getMinute(), -2);
+        }
+
+        if ($symbol === 's') {
+            // s   Seconds, with leading zeros 00 through 59
+            return substr('0' . $input->getSecond(), -2);
+        }
+
+        if ($symbol === 'u') {
+            // u   Microseconds
+            return str_pad($input->getMicrosecond(), 6, '0', STR_PAD_LEFT);
+        }
+
+        if ($symbol === 'v') {
+            // u   Milliseconds
+            return substr($this->format('u'), 0, 3);
+        }
+
+        if (
+            $input->getDateTime() !== null
+            && in_array($symbol, ['e', 'I', 'O', 'P', 'T', 'Z', 'c', 'r', 'U'])
+        ) {
+            return $input->getDateTime($symbol);
+        }
+
+        if ($symbol === 'e') {
+            // e   Timezone identifier (added in PHP 5.1.0)    Examples: UTC, GMT, Atlantic/Azores
+            return '{NIY}';
+        }
+
+        if ($symbol === 'I') {
+            // I (capital i)   Whether or not the date is in daylight saving time  1 if Daylight Saving Time, 0 otherwise.
+            return '{NIY}';
+        }
+
+        if ($symbol === 'O') {
+            // O   Difference to Greenwich time (GMT) in hours Example: +0200
+            return '{NIY}';
+        }
+
+        if ($symbol === 'P') {
+            // P   Difference to Greenwich time (GMT) with colon between hours and minutes (added in PHP 5.1.3)    Example: +02:00
+            return '{NIY}';
+        }
+
+        if ($symbol === 'T') {
+            // T   Timezone abbreviation   Examples: EST, MDT ...
+            return '{NIY}';
+        }
+
+        if ($symbol === 'Z') {
+            // Z   Timezone offset in seconds. The offset for timezones west of UTC is always negative, and for those east of UTC is always positive.  -43200 through 50400
+            return '{NIY}';
+        }
+
+        if ($symbol === 'c') {
+            // c   ISO 8601 date (added in PHP 5)  2004-02-12T15:19:21+00:00
+            // Would require getting back to the Formater/Lexer with 'Y-m-d\TH:i:sP'
+            return '{NIY}';
+        }
+
+        if ($symbol === 'r') {
+            // r   » RFC 2822 formatted date   Example: Thu, 21 Dec 2000 16:01:07 +0200
+            // Would require getting back to the Formater/Lexer with 'D, d M Y H:i:s P'
+            return '{NIY}';
+        }
+
+        if ($symbol === 'U') {
+            // U   Seconds since the Unix Epoch (January 1 1970 00:00:00 GMT)  See also time()
+            return '{NIY}';
         }
 
         return $symbol;
