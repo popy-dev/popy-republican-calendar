@@ -12,7 +12,6 @@ use Popy\Calendar\Converter\LeapYearCalculatorInterface;
 use Popy\Calendar\Converter\AbstractPivotalDateSolarYear;
 use Popy\RepublicanCalendar\Converter\LeapYearCalculator\RommeWithContinuedImpairLeapDay;
 
-
 /**
  * Finest converter implementation i could make.
  */
