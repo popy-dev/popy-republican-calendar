@@ -58,15 +58,18 @@ Constructors will defaults on a RommeWithContinuedImpairLeapDay/Modern couple.
 <?php
 
 use Popy\RepublicanCalendar\Formater;
-use Popy\RepublicanCalendar\Converter\RelativeTimestampLeapYear;
-use Popy\RepublicanCalendar\LeapYearCalculator\{Futuristic,RommeWithContinuedImpairLeapDay};
+use Popy\RepublicanCalendar\Converter\PivotalDate;
+use Popy\Calendar\Converter\LeapYearCalculator\{
+    Futuristic,
+    RommeWithContinuedImpairLeapDay
+};
 
-// Let's do better than catholics !
 $calculator = new RommeWithContinuedImpairLeapDay(
+    // Let's do better than Gregorians !
     new Futuristic()
 );
 
-$formater = new Formater(new RelativeTimestampLeapYear($calculator, null));
+$formater = new Formater(new PivotalDate($calculator, null));
 
 echo $calendar->format(new DateTime(), 'Y-m-d');
 
@@ -92,15 +95,15 @@ Components will usually default to the actual DuoDecimal representation
 <?php
 
 use Popy\RepublicanCalendar\Formater;
-use Popy\RepublicanCalendar\Converter\RelativeTimestampLeapYear;
-use Popy\RepublicanCalendar\TimeConverter\{DecimalTime,DuoDecimalTime};
+use Popy\RepublicanCalendar\Converter\PivotalDate;
+use Popy\Calendar\Converter\TimeConverter\{DecimalTime,DuoDecimalTime};
 
 $timeConverter = $yourRevolutionaryLevel > 9000
     ? new DecimalTime()
     : new DuoDecimalTime()
 ;
 
-$formater = new Formater(new RelativeTimestampLeapYear(null, $timeConverter));
+$formater = new Formater(new PivotalDate(null, $timeConverter));
 
 
 echo $calendar->format(new DateTime(), 'Y-m-d');

@@ -16,7 +16,7 @@ use Popy\RepublicanCalendar\Converter\LeapYearCalculator\RommeWithContinuedImpai
 /**
  * Finest converter implementation i could make.
  */
-class RelativeTimestampLeapYear extends AbstractPivotalDateSolarYear implements ConverterInterface
+class PivotalDate extends AbstractPivotalDateSolarYear implements ConverterInterface
 {
     /**
      * Year 1 date (will result in a year 0 index, incremented to be displayed).
