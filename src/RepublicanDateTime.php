@@ -18,6 +18,13 @@ class RepublicanDateTime
     protected $datetime;
 
     /**
+     * Timezone.
+     *
+     * @var DateTimeZone
+     */
+    protected $timezone;
+
+    /**
      * Year
      *
      * @var integer
@@ -73,7 +80,7 @@ class RepublicanDateTime
      */
     protected $microseconds = 0;
 
-    public function __construct($year, $dayIndex, $isLeap, DateTimeInterface $datetime = null)
+    public function __construct($year, $dayIndex, $isLeap, DateTimeInterface $datetime)
     {
         $this->year = $year;
         $this->dayIndex = $dayIndex;
@@ -81,6 +88,8 @@ class RepublicanDateTime
 
         $this->month = intval($dayIndex / 30) + 1;
         $this->day = $dayIndex % 30 + 1;
+
+        $this->timezone = $datetime->getTimezone();
 
         // To be removed
         $this->datetime = $datetime;
@@ -211,7 +220,7 @@ class RepublicanDateTime
      */
     public function getTimezone()
     {
-        return $this->datetime->getTimezone();
+        return $this->timezone;
     }
 }
 

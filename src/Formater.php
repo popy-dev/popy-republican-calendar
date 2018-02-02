@@ -53,12 +53,25 @@ class Formater implements FormaterInterface
     }
 
     /**
+     * Formats an already converted RepublicanDateTime
+     *
+     * @param RepublicanDateTime $input
+     * @param strong             $format @see self::format
+     *
+     * @return string
+     */
+    public function formatRepublican(RepublicanDateTime $input, $format)
+    {
+        return $this->doFormat($input, $format);
+    }
+
+    /**
      * @inheritDoc
      */
     protected function formatSymbol(&$res, $input, $symbol)
     {
         if ($symbol !== '|') {
-            $res .= $this->formater->format($input, $symbol);
+            $res .= $this->formater->format($input, $symbol, $this);
 
             return true;
         }

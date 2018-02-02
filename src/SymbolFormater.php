@@ -35,15 +35,16 @@ class SymbolFormater
     /**
      * Get a date-format symbol formatted result.
      *
-     * @param RepublicanDateTime $input  Input date.
-     * @param string             $symbol Symbol.
+     * @param RepublicanDateTime $input    Input date.
+     * @param string             $symbol   Symbol.
+     * @param Formater           $formater Formater/Lexer
      * 
      * Supported symbols : same as date() with :
      *  - D symbol added to match day individual name
      *
      * @return string|null
      */
-    public function format(RepublicanDateTime $input, $symbol)
+    public function format(RepublicanDateTime $input, $symbol, Formater $formater)
     {
         if ($symbol === 'y') {
             return $this->converter->decimalToRoman($input->getYear());
@@ -79,7 +80,7 @@ class SymbolFormater
                 return 30;
             }
             
-            return $this->format($input, 'L') ? 6 : 5;
+            return $input->isLeap() ? 6 : 5;
         }
 
         if ($symbol === 'd') {
@@ -94,7 +95,7 @@ class SymbolFormater
 
         if ($symbol === 'l') {
             // Jour de la semaine, textuel, version longue
-            return $this->locale->getWeekDayName($this->format($input, 'w'));
+            return $this->locale->getWeekDayName($this->format($input, 'w', $formater));
         }
 
         if ($symbol === 'D') {
@@ -119,12 +120,12 @@ class SymbolFormater
 
         if ($symbol === 'N') {
             // Représentation numérique ISO-8601 du jour de la semaine (ajouté en PHP 5.1.0)    
-            return $this->format($input, 'w') + 1;
+            return $this->format($input, 'w', $formater) + 1;
         }
 
         if ($symbol === 'W') {
             // Numéro de semaine dans l'année
-            return $this->format($input, 'z') % 10;
+            return $this->format($input, 'z', $formater) % 10;
         }
 
         if ($symbol === 'a' || $symbol === 'A') {
@@ -167,9 +168,10 @@ class SymbolFormater
 
         if ($symbol === 'v') {
             // u   Milliseconds
-            return substr($this->format('u'), 0, 3);
+            return substr($this->format($input, 'u', $formater), 0, 3);
         }
 
+        // TO BE REMOVED
         if (
             $input->getDateTime() !== null
             && in_array($symbol, ['e', 'I', 'O', 'P', 'T', 'Z', 'c', 'r', 'U'])
@@ -210,13 +212,13 @@ class SymbolFormater
         if ($symbol === 'c') {
             // c   ISO 8601 date (added in PHP 5)  2004-02-12T15:19:21+00:00
             // Would require getting back to the Formater/Lexer with 'Y-m-d\TH:i:sP'
-            return '{NIY}';
+            return $formater->formatRepublican($input, 'Y-m-d\TH:i:sP');
         }
 
         if ($symbol === 'r') {
             // r   » RFC 2822 formatted date   Example: Thu, 21 Dec 2000 16:01:07 +0200
             // Would require getting back to the Formater/Lexer with 'D, d M Y H:i:s P'
-            return '{NIY}';
+            return $formater->formatRepublican($input, 'D, d M Y H:i:s P');
         }
 
         if ($symbol === 'U') {
