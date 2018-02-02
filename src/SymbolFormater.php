@@ -136,34 +136,34 @@ class SymbolFormater
 
         if ($symbol === 'B') {
             // B   Swatch Internet time    000 through 999
-            return $input->getHour() * 100 + $input->getMinute();
+            return $input->getHours() * 100 + $input->getMinutes();
         }
 
         if ($symbol === 'g' || $symbol === 'G') {
             // g   12-hour format of an hour without leading zeros 1 through 12
             // G   24-hour format of an hour without leading zeros 0 through 23
-            return $input->getHour();
+            return $input->getHours();
         }
 
         if ($symbol === 'h' || $symbol === 'H') {
             // h   12-hour format of an hour with leading zeros    01 through 12
             // H   24-hour format of an hour with leading zeros    00 through 23
-            return substr('0' . $input->getHour(), -2);
+            return substr('0' . $input->getHours(), -2);
         }
 
         if ($symbol === 'i') {
             // i   Minutes with leading zeros  00 to 59
-            return substr('0' . $input->getMinute(), -2);
+            return substr('0' . $input->getMinutes(), -2);
         }
 
         if ($symbol === 's') {
             // s   Seconds, with leading zeros 00 through 59
-            return substr('0' . $input->getSecond(), -2);
+            return substr('0' . $input->getSeconds(), -2);
         }
 
         if ($symbol === 'u') {
             // u   Microseconds
-            return str_pad($input->getMicrosecond(), 6, '0', STR_PAD_LEFT);
+            return str_pad($input->getMicroseconds(), 6, '0', STR_PAD_LEFT);
         }
 
         if ($symbol === 'v') {

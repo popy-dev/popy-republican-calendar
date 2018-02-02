@@ -60,11 +60,12 @@ class RelativeTimestampLeapYear implements ConverterInterface
      */
     public function toRepublican(DateTimeInterface $input)
     {
+        $offset = intval($input->format('Z'));
         // Use a timestamp relative to the first revolutionnary year and
         // including timezone offset
         $relativeTimestamp = $input->getTimestamp()
             - static::REVOLUTION_ERA_START
-            + intval($input->format('Z'))
+            + $offset
         ;
 
         $eraDayIndex = intval($relativeTimestamp / static::SECONDS_PER_DAY);
@@ -98,13 +99,16 @@ class RelativeTimestampLeapYear implements ConverterInterface
             $year,
             $eraDayIndex,
             $this->calculator->isLeapYear($year),
-            $input
+            $input->getTimezone(),
+            $offset
         );
 
-        $time = $this->timeConverter->fromMicroSeconds($remainingMicroSeconds);
-        $res = $res->setTime($time[0], $time[1], $time[2], $time[3]);
-
-        return $res;
+        return $res
+            ->setTimestamp($input->getTimestamp())
+            ->setTime(
+                $this->timeConverter->fromMicroSeconds($remainingMicroSeconds)
+            )
+        ;
     }
 
     /**
@@ -128,7 +132,7 @@ class RelativeTimestampLeapYear implements ConverterInterface
         ;
 
         $remainingMicroSeconds = $this->timeConverter->toMicroSeconds(
-            [$input->getHour(), $input->getMinute(), $input->getSecond(), $input->getMicroSecond()]
+            $input->getTime()
         );
 
         $timestamp += intval($remainingMicroSeconds) / 1000000;
@@ -139,7 +143,7 @@ class RelativeTimestampLeapYear implements ConverterInterface
         // DateTimeZone->getOffset()
         $offset = 0;
         $previous = null;
-        $offsets = $input->getTimeZone()->getTransitions(
+        $offsets = $input->getTimezone()->getTransitions(
             $timestamp-static::SECONDS_PER_DAY
         );
         foreach ($offsets as $info) {
@@ -164,7 +168,7 @@ class RelativeTimestampLeapYear implements ConverterInterface
         );
 
         return DateTimeImmutable::createFromFormat('U.u e', $timestring)
-            ->setTimezone($input->getTimeZone())
+            ->setTimezone($input->getTimezone())
         ;
     }
 }

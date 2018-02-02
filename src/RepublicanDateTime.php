@@ -3,27 +3,18 @@
 namespace Popy\RepublicanCalendar;
 
 use DateTimeZone;
-use DateTimeInterface;
 
 /**
  * Republican date value object, for internal use.
+ *
+ * Keep in mind that this class is only a date representation. The actual and
+ * trusted "time value" is the timestamp. A RepublicanDateTime may not know
+ * the timestamp it represents.
+ *
+ * There are no internal constistency checks !
  */
 class RepublicanDateTime
 {
-    /**
-     * Original/Real DateTime object.
-     *
-     * @var DateTimeInterface
-     */
-    protected $datetime;
-
-    /**
-     * Timezone.
-     *
-     * @var DateTimeZone
-     */
-    protected $timezone;
-
     /**
      * Year
      *
@@ -51,36 +42,36 @@ class RepublicanDateTime
      * @var integer
      */
     protected $dayIndex;
-    
-    /**
-     * Hours
-     *
-     * @var integer
-     */
-    protected $hour = 0;
-    
-    /**
-     * Minutes
-     *
-     * @var integer
-     */
-    protected $minute = 0;
-    
-    /**
-     * Seconds
-     *
-     * @var integer
-     */
-    protected $second = 0;
 
     /**
-     * Microseconds
+     * Time informations (hours, minutes, seconds, microseconds)
+     *
+     * @var array<int>
+     */
+    protected $time = [0, 0, 0, 0];
+
+    /**
+     * Timestamp : actual and trusted time representation.
+     *
+     * @var integer|null
+     */
+    protected $timestamp;
+
+    /**
+     * Timezone.
+     *
+     * @var DateTimeZone
+     */
+    protected $timezone;
+
+    /**
+     * TimeZone offset used when building this date object.
      *
      * @var integer
      */
-    protected $microseconds = 0;
+    protected $offset;
 
-    public function __construct($year, $dayIndex, $isLeap, DateTimeInterface $datetime)
+    public function __construct($year, $dayIndex, $isLeap, DateTimeZone $timezone, $offset = 0)
     {
         $this->year = $year;
         $this->dayIndex = $dayIndex;
@@ -89,38 +80,46 @@ class RepublicanDateTime
         $this->month = intval($dayIndex / 30) + 1;
         $this->day = $dayIndex % 30 + 1;
 
-        $this->timezone = $datetime->getTimezone();
-
-        // To be removed
-        $this->datetime = $datetime;
+        $this->timezone = $timezone;
+        $this->offset = $offset;
     }
 
     /**
      * Set time information.
      *
-     * @param integer $hour        Hours.
-     * @param integer $minute      Minutes.
-     * @param integer $second      Seconds.
-     * @param integer $microsecond Microseconds.
+     * @param array<int> $time
      */
-    public function setTime($hour, $minute = 0, $second = 0, $microsecond = 0)
+    public function setTime(array $time)
     {
-        $this->hour = $hour;
-        $this->minute = $minute;
-        $this->second = $second;
-        $this->microsecond = $microsecond;
+        $res = clone $this;
 
-        return $this;
+        $res->time = $time + [0, 0, 0, 0];
+
+        return $res;
     }
 
     /**
-     * Gets the internal DateTime object.
+     * Get time informations.
      *
-     * @return DateTimeInterface
+     * @return array<int>
      */
-    public function getDateTime()
+    public function getTime()
     {
-        return $this->datetime;
+        return $this->time;
+    }
+
+    /**
+     * Sets the timestamp.
+     *
+     * @param integer $timestamp
+     */
+    public function setTimestamp($timestamp)
+    {
+        $res = clone $this;
+
+        $res->timestamp = $timestamp;
+
+        return $res;
     }
 
     /**
@@ -174,43 +173,53 @@ class RepublicanDateTime
     }
 
     /**
-     * Gets the Republican hour.
+     * Gets the Republican hours.
      *
      * @return integer.
      */
-    public function getHour()
+    public function getHours()
     {
-        return $this->hour;
+        return $this->time[0];
     }
 
     /**
-     * Gets the Republican minute.
+     * Gets the Republican minutes.
      *
      * @return integer.
      */
-    public function getMinute()
+    public function getMinutes()
     {
-        return $this->minute;
+        return $this->time[1];
     }
 
     /**
-     * Gets the Republican second.
+     * Gets the Republican seconds.
      *
      * @return integer.
      */
-    public function getSecond()
+    public function getSeconds()
     {
-        return $this->second;
+        return $this->time[2];
     }
 
     /**
-     * Get Republican microsecond.
+     * Get Republican microseconds.
      *
      * @return integer
      */
-    public function getMicrosecond()
+    public function getMicroseconds()
     {
-        return $this->microsecond;
+        return $this->time[3];
+    }
+
+    /**
+     * Gets the timestamp, if available.
+     *
+     * @return integer|null
+     */
+    public function getTimestamp()
+    {
+        return $this->timestamp;
     }
 
     /**
