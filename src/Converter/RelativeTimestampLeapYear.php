@@ -7,10 +7,10 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use Popy\RepublicanCalendar\RepublicanDateTime;
 use Popy\RepublicanCalendar\ConverterInterface;
-use Popy\RepublicanCalendar\LeapYearCalculatorInterface;
-use Popy\RepublicanCalendar\LeapYearCalculator\Modern;
 use Popy\RepublicanCalendar\TimeConverterInterface;
+use Popy\RepublicanCalendar\LeapYearCalculatorInterface;
 use Popy\RepublicanCalendar\TimeConverter\DuoDecimalTime;
+use Popy\RepublicanCalendar\LeapYearCalculator\RommeWithContinuedImpairLeapDay;
 
 /**
  * Finest converter implementation i could make.
@@ -51,7 +51,7 @@ class RelativeTimestampLeapYear implements ConverterInterface
      */
     public function __construct(LeapYearCalculatorInterface $calculator = null, TimeConverterInterface $timeConverter = null)
     {
-        $this->calculator = $calculator ?: new Modern();
+        $this->calculator = $calculator ?: new RommeWithContinuedImpairLeapDay();
         $this->timeConverter = $timeConverter ?: new DuoDecimalTime();
     }
 
