@@ -1,8 +1,9 @@
 <?php
 
-namespace Popy\RepublicanCalendar\LeapYearCalculator;
+namespace Popy\RepublicanCalendar\Converter\LeapYearCalculator;
 
-use Popy\RepublicanCalendar\LeapYearCalculatorInterface;
+use Popy\Calendar\Converter\LeapYearCalculatorInterface;
+use Popy\Calendar\Converter\LeapYearCalculator\Modern;
 
 /**
  * During the revolutionary calendar lifetime, leap years where 3, 7, 11, 15, 19

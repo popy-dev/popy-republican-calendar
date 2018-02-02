@@ -1,8 +1,9 @@
 <?php
 
-namespace Popy\RepublicanCalendar\LeapYearCalculator;
+namespace Popy\RepublicanCalendar\Converter\LeapYearCalculator;
 
-use Popy\RepublicanCalendar\LeapYearCalculatorInterface;
+use Popy\Calendar\Converter\LeapYearCalculatorInterface;
+use Popy\Calendar\Converter\LeapYearCalculator\Modern;
 
 /**
  * Implementation of a possible solution : at year 20, starts leaping a year
