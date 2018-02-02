@@ -20,7 +20,7 @@ class RommeWithFixedLeapDay implements LeapYearCalculatorInterface
 
     /**
      * Class constructor.
-     * 
+     *
      * @param LeapYearCalculatorInterface|null $internal
      */
     public function __construct(LeapYearCalculatorInterface $internal = null)

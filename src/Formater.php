@@ -39,7 +39,7 @@ class Formater implements FormaterInterface
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Date format : same as date() with :
      *  - D symbol added to match day individual name
      *  - | symbol to separate the "normal date" format and the optionnal "sans culottide date" format

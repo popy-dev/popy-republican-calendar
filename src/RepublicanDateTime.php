@@ -164,7 +164,7 @@ class RepublicanDateTime
 
     /**
      * Is a leap year.
-     * 
+     *
      * @return boolean
      */
     public function isLeap()
@@ -232,4 +232,3 @@ class RepublicanDateTime
         return $this->timezone;
     }
 }
-

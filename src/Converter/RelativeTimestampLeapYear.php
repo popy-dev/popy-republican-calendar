@@ -120,7 +120,7 @@ class RelativeTimestampLeapYear implements ConverterInterface
 
         $sign = $year < 1 ? -1 : 1;
 
-        for ($i=min($year, 1); $i < max($year, 1); $i++) { 
+        for ($i=min($year, 1); $i < max($year, 1); $i++) {
             $dayCount = 365 + $this->calculator->isLeapYear($i);
             $dayIndex += $sign * $dayCount;
         }

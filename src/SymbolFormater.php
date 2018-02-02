@@ -40,7 +40,7 @@ class SymbolFormater
      * @param RepublicanDateTime $input    Input date.
      * @param string             $symbol   Symbol.
      * @param Formater           $formater Formater/Lexer
-     * 
+     *
      * Supported symbols : same as date() with :
      *  - D symbol added to match day individual name
      *
@@ -121,7 +121,7 @@ class SymbolFormater
         }
 
         if ($symbol === 'N') {
-            // Représentation numérique ISO-8601 du jour de la semaine (ajouté en PHP 5.1.0)    
+            // Représentation numérique ISO-8601 du jour de la semaine (ajouté en PHP 5.1.0)
             return $this->format($input, 'w', $formater) + 1;
         }
 
