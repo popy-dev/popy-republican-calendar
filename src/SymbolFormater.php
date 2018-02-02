@@ -2,7 +2,9 @@
 
 namespace Popy\RepublicanCalendar;
 
-use Popy\RepublicanCalendar\Locale\HardcodedFrench as DefaultLocale;
+use Popy\Calendar\Formater\LocaleInterface;
+use Popy\Calendar\Formater\Utility\RomanConverter;
+use Popy\RepublicanCalendar\Formater\Locale\HardcodedFrench;
 
 class SymbolFormater
 {
@@ -28,7 +30,7 @@ class SymbolFormater
      */
     public function __construct(LocaleInterface $locale = null, RomanConverter $converter = null)
     {
-        $this->locale = $locale ?: new DefaultLocale();
+        $this->locale = $locale ?: new HardcodedFrench();
         $this->converter = $converter ?: new RomanConverter();
     }
 

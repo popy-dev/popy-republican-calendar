@@ -1,8 +1,8 @@
 <?php
 
-namespace Popy\RepublicanCalendar\Locale;
+namespace Popy\RepublicanCalendar\Formater\Locale;
 
-use Popy\RepublicanCalendar\LocaleInterface;
+use Popy\Calendar\Formater\LocaleInterface;
 
 class HardcodedFrench implements LocaleInterface
 {
