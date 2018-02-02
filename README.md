@@ -6,12 +6,13 @@ Republican/Revolutionary calendar.
 
 https://en.wikipedia.org/wiki/French_Republican_Calendar
 
-Date convertors are inspired from [caarmen's work](https://github.com/caarmen/french-revolutionary-calendar).
+Date convertors are no longer inspired from [caarmen's work](https://github.com/caarmen/french-revolutionary-calendar)
+but her work helped me a lot to wrap my head around all the difficulties of
+date conversion.
 
-The dates conversion usually take into account DateTimeZone, and daylight
-savings offset, which are keeped as regular hour jumps, at the same dates/hours
-than with regular dates, which gives constistency in a day.
-But aren't daylight savings stupid anyway ?
+The dates conversion handles timezones and DST, which are keeped as regular hour
+jumps, at the same dates/hours than with regular dates, which gives constistency
+in a day. But aren't daylight savings stupid anyway ?
 
 Every class constructor is callable without arguments, and will build their
 dependencies if needed.
