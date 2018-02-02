@@ -2,15 +2,14 @@
 
 namespace Popy\RepublicanCalendar\Converter;
 
-use DateTimeZone;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Popy\RepublicanCalendar\RepublicanDateTime;
 use Popy\RepublicanCalendar\ConverterInterface;
-use Popy\RepublicanCalendar\TimeConverterInterface;
-use Popy\RepublicanCalendar\LeapYearCalculatorInterface;
-use Popy\RepublicanCalendar\TimeConverter\DuoDecimalTime;
-use Popy\RepublicanCalendar\LeapYearCalculator\RommeWithContinuedImpairLeapDay;
+use Popy\Calendar\Converter\TimeConverterInterface;
+use Popy\Calendar\Converter\TimeConverter\DuoDecimalTime;
+use Popy\Calendar\Converter\LeapYearCalculatorInterface;
+use Popy\RepublicanCalendar\Converter\LeapYearCalculator\RommeWithContinuedImpairLeapDay;
 
 /**
  * Finest converter implementation i could make.
