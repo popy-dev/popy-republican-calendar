@@ -43,41 +43,50 @@ class SymbolFormater
      *
      * Supported symbols : same as date() with :
      *  - D symbol added to match day individual name
+     *  - y symbol returns a roman representation of the year
      *
      * @return string|null
      */
     public function format(RepublicanDateTime $input, $symbol, Formater $formater)
     {
         if ($symbol === 'y') {
+            // y   A two digit representation of a year
             return $this->converter->decimalToRoman($input->getYear());
         }
 
-        if ($symbol === 'Y') {
-            return $input->getYear();
+        if ($symbol === 'Y' || $symbol === 'o') {
+            // Y   A full numeric representation of a year, 4 digits
+            // o   ISO-8601 week-numbering year. This has the same value as Y, except that if the ISO week number (W) belongs to the previous or next year, that year is used instead.
+            return sprintf('%04d', $input->getYear());
         }
 
         if ($symbol === 'L') {
-            // Is leap year
+            // L   Whether it's a leap year
             return $input->isLeap();
         }
 
         if ($symbol === 'F') {
-            // Month name
+            // F   A full textual representation of a month, such as January or March
             return $this->locale->getMonthName($input->getMonth());
         }
 
+        if ($symbol === 'M') {
+            // M   A short textual representation of a month, three letters    Jan through Dec
+            return '{NIY}';
+        }
+
         if ($symbol === 'm') {
-            // Mois avec les zéros initiaux
+            // m   Numeric representation of a month, with leading zeros   01 through 12
             return sprintf('%02d', $input->getMonth());
         }
 
         if ($symbol === 'n') {
-            // Mois sans les zéros initiaux
+            // n   Numeric representation of a month, without leading zeros
             return $input->getMonth();
         }
 
         if ($symbol === 't') {
-            // Nombre de jours dans le mois
+            // t   Number of days in the given month
             if ($input->getMonth() < 13) {
                 return 30;
             }
@@ -86,47 +95,47 @@ class SymbolFormater
         }
 
         if ($symbol === 'd') {
-            // Jour du mois, sur deux chiffres (avec un zéro initial)
+            // d   Day of the month, 2 digits with leading zeros   01 to 31
             return sprintf('%02d', $input->getDay());
         }
 
         if ($symbol === 'j') {
-            // Jour du mois sans les zéros initiaux
+            // j   Day of the month without leading zeros  1 to 31
             return $input->getDay();
         }
 
         if ($symbol === 'l') {
-            // Jour de la semaine, textuel, version longue
+            // l (lowercase 'L')   A full textual representation of the day of the week
             return $this->locale->getWeekDayName($this->format($input, 'w', $formater));
         }
 
         if ($symbol === 'D') {
-            // Jour de la semaine, textuel, version longue
+            // D   A textual representation of a day, three letters    Mon through Sun
             return $this->locale->getDayName($input->getDayIndex());
         }
 
         if ($symbol === 'S') {
-            // Suffixe ordinal d'un nombre pour le jour du mois, en anglais, sur deux lettres
+            // S   English ordinal suffix for the day of the month, 2 characters
             return $this->locale->getNumberOrdinalSuffix($input->getDay());
         }
 
         if ($symbol === 'w') {
-            // Jour de la semaine au format numérique
+            // w   Numeric representation of the day of the week   0 (for Sunday) through 6 (for Saturday)
             return ($input->getDay() - 1) % 10;
         }
 
         if ($symbol === 'z') {
-            // Jour de l'année
+            // z   The day of the year (starting from 0)
             return $input->getDayIndex();
         }
 
         if ($symbol === 'N') {
-            // Représentation numérique ISO-8601 du jour de la semaine (ajouté en PHP 5.1.0)
+            // N   ISO-8601 numeric representation of the day of the week (added in PHP 5.1.0) 1 (for Monday) through 7 (for Sunday)
             return $this->format($input, 'w', $formater) + 1;
         }
 
         if ($symbol === 'W') {
-            // Numéro de semaine dans l'année
+            // W   ISO-8601 week number of year, weeks starting on Monday
             return $this->format($input, 'z', $formater) % 10;
         }
 

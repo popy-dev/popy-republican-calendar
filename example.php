@@ -9,10 +9,11 @@ use Popy\Calendar\Calendar\GregorianCalendar;
 $format = 'l jS F y H:i:s, D|F, D, y H:i:s';
 
 
-$revolutionnary = new PresetFormater(new Formater($converter), $format);
+$revolutionnary = new PresetFormater(new Formater(), $format);
 $gregorian      = new PresetFormater(new GregorianCalendar(), 'Y-m-d H:i:s');
 
 $dates = [
+    new DateTime('900-01-01'),
     // Year 1
     new DateTime('1792-09-22'),
 
