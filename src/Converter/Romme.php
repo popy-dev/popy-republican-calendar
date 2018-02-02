@@ -9,7 +9,7 @@ use Popy\RepublicanCalendar\RepublicanDateTime;
 use Popy\RepublicanCalendar\ConverterInterface;
 
 /**
- * Romme implementation, adapted from caarmen's implementation
+ * Romme implementation, adapted from caarmen's implementation. Kept as tribute.
  *
  * Does not handle time (by design), so better wrap it with TimeConverter.
  *

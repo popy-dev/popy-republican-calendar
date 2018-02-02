@@ -36,7 +36,7 @@ class TimeConverter implements ConverterInterface
      */
     public function __construct(ConverterInterface $converter = null, TimeConverterInterface $timeConverter = null)
     {
-        $this->converter = $converter ?: new Romme();
+        $this->converter = $converter ?: new RelativeTimestampLeapYear();
         $this->timeConverter = $timeConverter ?: new DecimalTime();
     }
 

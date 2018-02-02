@@ -7,7 +7,7 @@ use Popy\RepublicanCalendar\RepublicanDateTime;
 use Popy\RepublicanCalendar\ConverterInterface;
 
 /**
- * Initial (bad) converter implementation.
+ * Initial (bad) converter implementation. Kept for humility.
  *
  * Does not handle time, so better wrap it with TimeConverter.
  */
