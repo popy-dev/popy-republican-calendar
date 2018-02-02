@@ -2,8 +2,7 @@
 
 namespace Popy\RepublicanCalendar\TimeConverter;
 
-use DateTimeInterface;
-use Popy\RepublicanCalendar\RepublicanDateTime;
+use Popy\RepublicanCalendar\Utility\TimeConverter;
 use Popy\RepublicanCalendar\TimeConverterInterface;
 
 /**
@@ -12,26 +11,45 @@ use Popy\RepublicanCalendar\TimeConverterInterface;
 class DuoDecimalTime implements TimeConverterInterface
 {
     /**
-     * @inheritDoc
+     * Time conversion utility.
+     *
+     * @var TimeConverter
      */
-    public function toRepublicanTime(DateTimeInterface $input)
+    protected $converter;
+
+    static $ranges = [24, 60, 60, 1000000];
+
+    /**
+     * Class constructor.
+     *
+     * @param TimeConverter|null $converter Time conversion utility.
+     */
+    public function __construct(TimeConverter $converter = null)
     {
-        return array_map(
-            'intval',
-            explode(':', $input->format('H:i:s:u'))
-        );
+        $this->converter = $converter ?: new TimeConverter();
     }
 
     /**
-     * @inheritDoc
+     * Converts a microsecond count into the implemented time format, as array.
+     *
+     * @param integer $input
+     *
+     * @return array<int> [hours, minutes, seconds, microseconds, ...]
      */
-    public function fromRepublicanTime(RepublicanDateTime $input)
+    public function fromMicroSeconds($input)
     {
-        return [
-            $input->getHour(),
-            $input->getMinute(),
-            $input->getSecond(),
-            $input->getMicrosecond(),
-        ];
+        return $this->converter->getTimeFromLowerUnityCount($input, static::$ranges);
+    }
+
+    /**
+     * Converts a time (of implemented format) into a microsecond count.
+     *
+     * @param array<int> $input
+     *
+     * @return integer
+     */
+    public function toMicroSeconds(array $input)
+    {
+        return $this->converter->getLowerUnityCountFromTime($input, static::$ranges);
     }
 }

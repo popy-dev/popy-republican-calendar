@@ -4,15 +4,14 @@ require './vendor/autoload.php';
 
 use Popy\RepublicanCalendar\Formater;
 use Popy\Calendar\Calendar\GregorianCalendar;
-use Popy\RepublicanCalendar\Converter\TimeConverter;
+use Popy\RepublicanCalendar\Converter\RelativeTimestampLeapYear;
 use Popy\RepublicanCalendar\Converter\VonMadler;
 
 $format = 'l jS F y H:i:s, D|F, D, y H:i:s';
 $format = 'l jS F Y H:i:s, D|F, D, y H:i:s';
 //$format = 'Y-m-d H:i:s D';
 
-$converter = new TimeConverter();
-
+$converter = new RelativeTimestampLeapYear();
 $romme = new \Popy\Calendar\PresetFormater(new Formater($converter), $format);
 $gregorian = new \Popy\Calendar\PresetFormater(new GregorianCalendar(), 'Y-m-d H:i:s');
 

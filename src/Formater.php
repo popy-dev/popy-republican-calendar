@@ -5,7 +5,7 @@ namespace Popy\RepublicanCalendar;
 use DateTimeInterface;
 use Popy\Calendar\FormaterInterface;
 use Popy\Calendar\Formater\FormatLexerTrait;
-use Popy\RepublicanCalendar\Converter\TimeConverter;
+use Popy\RepublicanCalendar\Converter\RelativeTimestampLeapYear;
 
 class Formater implements FormaterInterface
 {
@@ -33,7 +33,7 @@ class Formater implements FormaterInterface
      */
     public function __construct(ConverterInterface $converter = null, SymbolFormater $formater = null)
     {
-        $this->converter = $converter ?: new TimeConverter();
+        $this->converter = $converter ?: new RelativeTimestampLeapYear();
         $this->formater  = $formater  ?: new SymbolFormater();
     }
 

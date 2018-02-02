@@ -2,8 +2,6 @@
 
 namespace Popy\RepublicanCalendar\TimeConverter;
 
-use DateTimeInterface;
-use Popy\RepublicanCalendar\RepublicanDateTime;
 use Popy\RepublicanCalendar\Utility\TimeConverter;
 use Popy\RepublicanCalendar\TimeConverterInterface;
 
@@ -13,25 +11,23 @@ use Popy\RepublicanCalendar\TimeConverterInterface;
 class DecimalTime implements TimeConverterInterface
 {
     /**
+     * Microseconds in a day
+     */
+    const MICROSECONDS_IN_DAY = 24*3600*1000000;
+
+    /**
+     * Decimat format ranges
+     *
+     * @var array<int>
+     */
+    static $ranges = [10, 100, 100, 1000000];
+
+    /**
      * Time conversion utility.
      *
      * @var TimeConverter
      */
     protected $converter;
-
-    /**
-     * Decimal time parts ranges.
-     *
-     * @var array<int>
-     */
-    static $decimalRanges = [10, 100, 100, 1000000];
-
-    /**
-     * Duodecimal time parts ranges.
-     *
-     * @var array<int>
-     */
-    static $duoDecimalRanges = [24, 60, 60, 1000000];
 
     /**
      * Class constructor.
@@ -44,33 +40,36 @@ class DecimalTime implements TimeConverterInterface
     }
 
     /**
-     * @inheritDoc
+     * Converts a microsecond count into the implemented time format, as array.
+     *
+     * @param integer $input
+     *
+     * @return array<int> [hours, minutes, seconds, microseconds, ...]
      */
-    public function toRepublicanTime(DateTimeInterface $input)
+    public function fromMicroSeconds($input)
     {
-        list($hour, $min, $seconds, $micro) = explode(':', $input->format('H:i:s:u'));
-
-        return $this->converter->convertTime(
-            [$hour, $min, $seconds, $micro],
-            static::$duoDecimalRanges,
-            static::$decimalRanges
+        $input = intval(
+            ($input * array_product(static::$ranges))
+            / static::MICROSECONDS_IN_DAY
         );
+
+        return $this->converter->getTimeFromLowerUnityCount($input, static::$ranges);
     }
 
     /**
-     * @inheritDoc
+     * Converts a time (of implemented format) into a microsecond count.
+     *
+     * @param array<int> $input
+     *
+     * @return integer
      */
-    public function fromRepublicanTime(RepublicanDateTime $input)
+    public function toMicroSeconds(array $input)
     {
-        return $this->converter->convertTime(
-            [
-                $input->getHour(),
-                $input->getMinute(),
-                $input->getSecond(),
-                $input->getMicrosecond(),
-            ],
-            static::$decimalRanges,
-            static::$duoDecimalRanges
+        $res = $this->converter->getLowerUnityCountFromTime($input, static::$ranges);
+
+        return intval(
+            ($res * static::MICROSECONDS_IN_DAY)
+            / array_product(static::$ranges)
         );
     }
 }

@@ -10,20 +10,20 @@ use DateTimeInterface;
 interface TimeConverterInterface
 {
     /**
-     * Converts a regular time (H:i:s:u) into a republican time (as array).
+     * Converts a microsecond count into the implemented time format, as array.
      *
-     * @param DateTimeInterface $input
+     * @param integer $input
      *
-     * @return array<int> [hours, minutes, seconds, microseconds]
+     * @return array<int> [hours, minutes, seconds, microseconds, ...]
      */
-    public function toRepublicanTime(DateTimeInterface $input);
+    public function fromMicroSeconds($input);
 
     /**
-     * Converts a republican time (H:i:s:u) into a regular time (as array).
+     * Converts a time (of implemented format) into a microsecond count.
      *
-     * @param RepublicanDateTime $input
+     * @param array<int> $input
      *
-     * @return array<int> [hours, minutes, seconds, microseconds]
+     * @return integer
      */
-    public function fromRepublicanTime(RepublicanDateTime $input);
+    public function toMicroSeconds(array $input);
 }

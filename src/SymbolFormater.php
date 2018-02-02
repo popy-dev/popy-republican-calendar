@@ -171,14 +171,6 @@ class SymbolFormater
             return substr($this->format($input, 'u', $formater), 0, 3);
         }
 
-        // TO BE REMOVED
-        if (
-            $input->getDateTime() !== null
-            && in_array($symbol, ['e', 'I', 'O', 'P', 'T', 'Z', 'c', 'r', 'U'])
-        ) {
-            return $input->getDateTime($symbol);
-        }
-
         if ($symbol === 'e') {
             // e   Timezone identifier (added in PHP 5.1.0)    Examples: UTC, GMT, Atlantic/Azores
             return '{NIY}';

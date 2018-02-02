@@ -9,9 +9,8 @@ use Popy\RepublicanCalendar\RepublicanDateTime;
 use Popy\RepublicanCalendar\ConverterInterface;
 use Popy\RepublicanCalendar\LeapYearCalculatorInterface;
 use Popy\RepublicanCalendar\LeapYearCalculator\Modern;
-
-
-use Popy\RepublicanCalendar\Utility\TimeConverter as TimeConverterUtility;
+use Popy\RepublicanCalendar\TimeConverterInterface;
+use Popy\RepublicanCalendar\TimeConverter\DuoDecimalTime;
 
 /**
  * Finest converter implementation i could make.
@@ -19,11 +18,15 @@ use Popy\RepublicanCalendar\Utility\TimeConverter as TimeConverterUtility;
 class RelativeTimestampLeapYear implements ConverterInterface
 {
     /**
-     * Year 1 date (will result in a year 0 index, incremented to be displayed)
+     * Year 1 date (will result in a year 0 index, incremented to be displayed).
+     *
+     * 1792-09-22 00:00:00
      */
-    const REVOLUTION_ERA_START = '1792-09-22 00:00:00';
-    const REVOLUTION_ERA_DATE_FORMAT = 'Y-m-d H:i:s';
+    const REVOLUTION_ERA_START = -5594227200;
 
+    /**
+     * Self-explanatory.
+     */
     const SECONDS_PER_DAY = 24 * 3600;
 
     /**
@@ -34,13 +37,22 @@ class RelativeTimestampLeapYear implements ConverterInterface
     protected $calculator;
 
     /**
+     * Time converter.
+     *
+     * @var TimeConverterInterface
+     */
+    protected $timeConverter;
+
+    /**
      * Class constructor.
      *
-     * @param LeapYearCalculatorInterface|null $calculator Leap year calculator.
+     * @param LeapYearCalculatorInterface|null $calculator    Leap year calculator.
+     * @param TimeConverterInterface|null      $timeConverter Time converter.
      */
-    public function __construct(LeapYearCalculatorInterface $calculator = null)
+    public function __construct(LeapYearCalculatorInterface $calculator = null, TimeConverterInterface $timeConverter = null)
     {
         $this->calculator = $calculator ?: new Modern();
+        $this->timeConverter = $timeConverter ?: new DuoDecimalTime();
     }
 
     /**
@@ -51,14 +63,9 @@ class RelativeTimestampLeapYear implements ConverterInterface
         // Use a timestamp relative to the first revolutionnary year and
         // including timezone offset
         $relativeTimestamp = $input->getTimestamp()
-            - $this->getRevolutionEraStart($input->getTimeZone())
+            - static::REVOLUTION_ERA_START
             + intval($input->format('Z'))
         ;
-
-        $offsets = $input->getTimeZone()->getTransitions(
-            $input->getTimestamp()-static::SECONDS_PER_DAY, 
-            $input->getTimestamp()+static::SECONDS_PER_DAY
-        );
 
         $eraDayIndex = intval($relativeTimestamp / static::SECONDS_PER_DAY);
         $year = 1;
@@ -83,14 +90,19 @@ class RelativeTimestampLeapYear implements ConverterInterface
             $year++;
         }
 
-        $c = new TimeConverterUtility();
+        $remainingMicroSeconds = intval($input->format('u'))
+            + ($relativeTimestamp % static::SECONDS_PER_DAY) * 1000000
+        ;
 
-        $remainingSeconds = $relativeTimestamp % static::SECONDS_PER_DAY;
-        $time = $c->getTimeFromLowerUnityCount($remainingSeconds, [24, 60, 60]);
+        $res = new RepublicanDateTime(
+            $year,
+            $eraDayIndex,
+            $this->calculator->isLeapYear($year),
+            $input
+        );
 
-        $res = new RepublicanDateTime($year, $eraDayIndex, $this->calculator->isLeapYear($year), $input);
-
-        $res = $res->setTime($time[0], $time[1], $time[2]);
+        $time = $this->timeConverter->fromMicroSeconds($remainingMicroSeconds);
+        $res = $res->setTime($time[0], $time[1], $time[2], $time[3]);
 
         return $res;
     }
@@ -111,16 +123,16 @@ class RelativeTimestampLeapYear implements ConverterInterface
         }
 
         // todo timezone handling !
-        $timestamp = $this->getRevolutionEraStart($input->getTimeZone())
+        $timestamp = static::REVOLUTION_ERA_START
             + ($dayIndex * static::SECONDS_PER_DAY)
         ;
 
-        $c = new TimeConverterUtility();
-
-        $timestamp += $c->getLowerUnityCountFromTime(
-            [$input->getHour(), $input->getMinute(), $input->getSecond()],
-            [24, 60, 60]
+        $remainingMicroSeconds = $this->timeConverter->toMicroSeconds(
+            [$input->getHour(), $input->getMinute(), $input->getSecond(), $input->getMicroSecond()]
         );
+
+        $timestamp += intval($remainingMicroSeconds) / 1000000;
+        $microseconds = $remainingMicroSeconds % 1000000;
 
         // Looking for timezone offset matching the incomplete timestamp.
         // The LMT transition is skipped to mirror the behaviour of
@@ -145,33 +157,14 @@ class RelativeTimestampLeapYear implements ConverterInterface
 
         $timestamp -= $offset;
 
-        return DateTimeImmutable::createFromFormat(
-                'U e',
-                $timestamp . ' UTC'
-            )
-            ->setTimezone($input->getTimeZone())
-        ;
-    }
+        $timestring = sprintf(
+            '%s.%06d UTC',
+            $timestamp,
+            $microseconds
+        );
 
-    /**
-     * Instanciates a RevolutionEraStart date for the given DateTimeZone, then
-     *    returns its timestamp. The DateTimeZone is here so that the
-     *    DateTimeIMmutable object is able to initialize properly on the same
-     *    timezone than the related date;
-     *
-     * @param DateTimeZone $timezone
-     *
-     * @return DateTimeImmutable
-     */
-    protected function getRevolutionEraStart(DateTimeZone $timezone)
-    {
-        return
-            DateTimeImmutable::createFromFormat(
-                static::REVOLUTION_ERA_DATE_FORMAT,
-                static::REVOLUTION_ERA_START,
-                $timezone
-            )
-            ->getTimestamp()
+        return DateTimeImmutable::createFromFormat('U.u e', $timestring)
+            ->setTimezone($input->getTimeZone())
         ;
     }
 }
