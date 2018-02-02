@@ -231,4 +231,14 @@ class RepublicanDateTime
     {
         return $this->timezone;
     }
+
+    /**
+     * Get offset.
+     *
+     * @return integer
+     */
+    public function getOffset()
+    {
+        return $this->offset;
+    }
 }

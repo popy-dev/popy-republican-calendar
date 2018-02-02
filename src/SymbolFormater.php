@@ -68,7 +68,7 @@ class SymbolFormater
 
         if ($symbol === 'm') {
             // Mois avec les zéros initiaux
-            return substr('0' . $input->getMonth(), -2);
+            return sprintf('%02d', $input->getMonth());
         }
 
         if ($symbol === 'n') {
@@ -87,7 +87,7 @@ class SymbolFormater
 
         if ($symbol === 'd') {
             // Jour du mois, sur deux chiffres (avec un zéro initial)
-            return substr('0' . $input->getDay(), -2);
+            return sprintf('%02d', $input->getDay());
         }
 
         if ($symbol === 'j') {
@@ -150,17 +150,17 @@ class SymbolFormater
         if ($symbol === 'h' || $symbol === 'H') {
             // h   12-hour format of an hour with leading zeros    01 through 12
             // H   24-hour format of an hour with leading zeros    00 through 23
-            return substr('0' . $input->getHours(), -2);
+            return sprintf('%02d', $input->getHours());
         }
 
         if ($symbol === 'i') {
             // i   Minutes with leading zeros  00 to 59
-            return substr('0' . $input->getMinutes(), -2);
+            return sprintf('%02d', $input->getMinutes());
         }
 
         if ($symbol === 's') {
             // s   Seconds, with leading zeros 00 through 59
-            return substr('0' . $input->getSeconds(), -2);
+            return sprintf('%02d', $input->getSeconds());
         }
 
         if ($symbol === 'u') {
@@ -175,7 +175,7 @@ class SymbolFormater
 
         if ($symbol === 'e') {
             // e   Timezone identifier (added in PHP 5.1.0)    Examples: UTC, GMT, Atlantic/Azores
-            return '{NIY}';
+            return $input->getTimezone()->getName();
         }
 
         if ($symbol === 'I') {
@@ -185,12 +185,23 @@ class SymbolFormater
 
         if ($symbol === 'O') {
             // O   Difference to Greenwich time (GMT) in hours Example: +0200
-            return '{NIY}';
+            return sprintf(
+                '%s%02d%02d',
+                $input->getOffset() < 0 ? '-' : '+',
+                intval(abs($input->getOffset()) / 3600),
+                intval(abs($input->getOffset())%60 / 60)
+            );
         }
 
         if ($symbol === 'P') {
             // P   Difference to Greenwich time (GMT) with colon between hours and minutes (added in PHP 5.1.3)    Example: +02:00
-            return '{NIY}';
+            // O   Difference to Greenwich time (GMT) in hours Example: +0200
+            return sprintf(
+                '%s%02d:%02d',
+                $input->getOffset() < 0 ? '-' : '+',
+                intval(abs($input->getOffset()) / 3600),
+                intval(abs($input->getOffset())%60 / 60)
+            );
         }
 
         if ($symbol === 'T') {
@@ -200,7 +211,7 @@ class SymbolFormater
 
         if ($symbol === 'Z') {
             // Z   Timezone offset in seconds. The offset for timezones west of UTC is always negative, and for those east of UTC is always positive.  -43200 through 50400
-            return '{NIY}';
+            return $input->getOffset();
         }
 
         if ($symbol === 'c') {
@@ -217,7 +228,7 @@ class SymbolFormater
 
         if ($symbol === 'U') {
             // U   Seconds since the Unix Epoch (January 1 1970 00:00:00 GMT)  See also time()
-            return '{NIY}';
+            return $input->getTimestamp();
         }
 
         return $symbol;

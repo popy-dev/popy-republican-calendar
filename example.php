@@ -2,18 +2,15 @@
 
 require './vendor/autoload.php';
 
+use Popy\Calendar\PresetFormater;
 use Popy\RepublicanCalendar\Formater;
 use Popy\Calendar\Calendar\GregorianCalendar;
-use Popy\RepublicanCalendar\Converter\PivotalDate;
-use Popy\RepublicanCalendar\Converter\VonMadler;
 
 $format = 'l jS F y H:i:s, D|F, D, y H:i:s';
-$format = 'l jS F Y H:i:s, D|F, D, y H:i:s';
-//$format = 'Y-m-d H:i:s D';
 
-$converter = new PivotalDate();
-$romme = new \Popy\Calendar\PresetFormater(new Formater($converter), $format);
-$gregorian = new \Popy\Calendar\PresetFormater(new GregorianCalendar(), 'Y-m-d H:i:s');
+
+$revolutionnary = new PresetFormater(new Formater($converter), $format);
+$gregorian      = new PresetFormater(new GregorianCalendar(), 'Y-m-d H:i:s');
 
 $dates = [
     // Year 1
@@ -34,7 +31,5 @@ $dates = [
 ];
 
 foreach ($dates as $date) {
-
-    $date2 = $converter->fromRepublican($converter->toRepublican($date));
-    echo $gregorian->format($date) . ' <=> ' . $gregorian->format($date2) . ' -> ' . $romme->format($date) . chr(10);
+    echo $gregorian->format($date) . ' -> ' . $revolutionnary->format($date) . chr(10);
 }
