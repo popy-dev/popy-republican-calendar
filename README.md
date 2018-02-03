@@ -1,24 +1,32 @@
 French Republican Calendar
 ==========================
 
-This repository holds a half-assed popy/calendar implementation of the French
-Republican/Revolutionary calendar.
-
-https://en.wikipedia.org/wiki/French_Republican_Calendar
+This is a popy/calendar implementation of the[French Republican/Revolutionary calendar.](https://en.wikipedia.org/wiki/French_Republican_Calendar),
+which is a 12 monthes of 30 days calendar, with 5 (or 6 on leap years)
+additional days which has been inspired from the Egyptian calendar.
 
 Date convertors are no longer inspired from [caarmen's work](https://github.com/caarmen/french-revolutionary-calendar)
 but her work helped me a lot to wrap my head around all the difficulties of
-date conversion.
+date conversion, so some of my earlier implementation may stay a while as a
+tribute (but won't be maintained).
 
 The dates conversion handles timezones and DST, which are keeped as regular hour
 jumps, at the same dates/hours than with regular dates, which gives constistency
-in a day. But aren't daylight savings stupid anyway ?
+in a day.
 
-Every class constructor is callable without arguments, and will build their
-dependencies if needed.
+Purpose
+-------
+It serves as an example/proof of concept, and as a sandbox. Code is tested there
+and eventually, if it works and is 
+This is an example implementation of popy/calendar interfaces, aswell as a 
+sandbox (who said litter) and improvement lab.
+Most of popy/calendar tools and interfaces originate from thsi repository.
 
 Usage
 -----
+
+Every class constructor is callable without arguments, and will build their
+dependencies if needed.
 
 Usage is basicall the same as any popy/php-calendar implementation :
 
@@ -66,7 +74,7 @@ use Popy\Calendar\Converter\LeapYearCalculator\{
 };
 
 $calculator = new RommeWithContinuedImpairLeapDay(
-    // Let's do better than Gregorians !
+    // Lets be prepared for Y4K !
     new Futuristic()
 );
 
@@ -77,20 +85,24 @@ echo $calendar->format(new DateTime(), 'Y-m-d');
 ?>
 ```
 
-
 Time formats
 ------------
 
 The French Republican/Revolutionary calendar initially came with a decimal time
-format (10h, 100m, 100s) replacing the duodecimal format (24h, 60m, 60s), but
-was quickly abandonned, probably because of the difficuly and cost to replace
-every clock in the country (because at that time, they didn't have smartwatches
-able to upgrade their apps. Dark times.)
+format (10h, 100m, 100s) just as the egyption inspiration, replacing the
+duodecimal format (24h, 60m, 60s), but was quickly abandonned, probably because
+of the difficuly and cost to replace every clock in the country (because at that
+time, they didn't have smartwatches able to upgrade their apps. Dark times.)
 
 So, depending on how revolutionnary you feel, you can use one format or another,
 by injecting the TimeConvertor suiting your needs.
 
-Components will usually default to the actual DuoDecimal representation
+Components will usually default to the actual DuoDecimal representation.
+
+Trivia : The Chinese time system divided the day in 100 equal parts (ke) of
+14 minutes 24seconds, which is very close of our quarter hour, and matches
+perfectly the 10 minutes in the decimal time system. Isn't that
+interoperability ?
 
 ```php
 <?php

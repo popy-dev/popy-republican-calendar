@@ -5,6 +5,7 @@ namespace Popy\RepublicanCalendar;
 use Popy\Calendar\Formater\LocaleInterface;
 use Popy\Calendar\Formater\Utility\RomanConverter;
 use Popy\RepublicanCalendar\Formater\Locale\HardcodedFrench;
+use Popy\RepublicanCalendar\Converter\DateTimeRepresentation\EgyptianDateTime;
 
 class SymbolFormater
 {
@@ -37,17 +38,18 @@ class SymbolFormater
     /**
      * Get a date-format symbol formatted result.
      *
-     * @param RepublicanDateTime $input    Input date.
-     * @param string             $symbol   Symbol.
-     * @param Formater           $formater Formater/Lexer
+     * @param EgyptianDateTime $input    Input date.
+     * @param string           $symbol   Symbol.
+     * @param Formater         $formater Formater/Lexer
      *
      * Supported symbols : same as date() with :
-     *  - D symbol added to match day individual name
-     *  - y symbol returns a roman representation of the year
+     *  - X symbol added to match day individual name
+     *  - y symbol returns a roman representation of the year, as a 2 digits
+     *      year representation doesn't make sense
      *
      * @return string|null
      */
-    public function format(RepublicanDateTime $input, $symbol, Formater $formater)
+    public function format(EgyptianDateTime $input, $symbol, Formater $formater)
     {
         if ($symbol === 'y') {
             // y   A two digit representation of a year
@@ -62,7 +64,7 @@ class SymbolFormater
 
         if ($symbol === 'L') {
             // L   Whether it's a leap year
-            return $input->isLeap();
+            return $input->isLeapYear();
         }
 
         if ($symbol === 'F') {
@@ -72,7 +74,7 @@ class SymbolFormater
 
         if ($symbol === 'M') {
             // M   A short textual representation of a month, three letters    Jan through Dec
-            return '{NIY}';
+            return $this->locale->getMonthShortName($input->getMonth());
         }
 
         if ($symbol === 'm') {
@@ -91,7 +93,7 @@ class SymbolFormater
                 return 30;
             }
             
-            return $input->isLeap() ? 6 : 5;
+            return $input->isLeapYear() ? 6 : 5;
         }
 
         if ($symbol === 'd') {
@@ -106,12 +108,17 @@ class SymbolFormater
 
         if ($symbol === 'l') {
             // l (lowercase 'L')   A full textual representation of the day of the week
-            return $this->locale->getWeekDayName($this->format($input, 'w', $formater));
+            return $this->locale->getDayName('w' . $this->format($input, 'w', $formater));
         }
 
         if ($symbol === 'D') {
-            // D   A textual representation of a day, three letters    Mon through Sun
-            return $this->locale->getDayName($input->getDayIndex());
+            // D   A textual representation of a day, three letters
+            return $this->locale->getDayShortName('w' . $this->format($input, 'w', $formater));
+        }
+
+        if ($symbol === 'X') {
+            // Added symbol : Day individual name
+            return $this->locale->getDayName('y' . $input->getDayIndex());
         }
 
         if ($symbol === 'S') {
@@ -226,13 +233,13 @@ class SymbolFormater
         if ($symbol === 'c') {
             // c   ISO 8601 date (added in PHP 5)  2004-02-12T15:19:21+00:00
             // Would require getting back to the Formater/Lexer with 'Y-m-d\TH:i:sP'
-            return $formater->formatRepublican($input, 'Y-m-d\TH:i:sP');
+            return $formater->formatEgyptian($input, 'Y-m-d\TH:i:sP');
         }
 
         if ($symbol === 'r') {
             // r   » RFC 2822 formatted date   Example: Thu, 21 Dec 2000 16:01:07 +0200
             // Would require getting back to the Formater/Lexer with 'D, d M Y H:i:s P'
-            return $formater->formatRepublican($input, 'D, d M Y H:i:s P');
+            return $formater->formatEgyptian($input, 'D, d M Y H:i:s P');
         }
 
         if ($symbol === 'U') {

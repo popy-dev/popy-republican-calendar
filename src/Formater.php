@@ -4,8 +4,10 @@ namespace Popy\RepublicanCalendar;
 
 use DateTimeInterface;
 use Popy\Calendar\FormaterInterface;
+use Popy\Calendar\ConverterInterface;
 use Popy\Calendar\Formater\FormatLexerTrait;
-use Popy\RepublicanCalendar\Converter\PivotalDate;
+use Popy\RepublicanCalendar\Converter\RepublicanPivotalDate;
+use Popy\RepublicanCalendar\Converter\DateTimeRepresentation\EgyptianDateTime;
 
 class Formater implements FormaterInterface
 {
@@ -33,7 +35,7 @@ class Formater implements FormaterInterface
      */
     public function __construct(ConverterInterface $converter = null, SymbolFormater $formater = null)
     {
-        $this->converter = $converter ?: new PivotalDate();
+        $this->converter = $converter ?: new RepublicanPivotalDate();
         $this->formater  = $formater  ?: new SymbolFormater();
     }
 
@@ -47,20 +49,20 @@ class Formater implements FormaterInterface
     public function format(DateTimeInterface $input, $format)
     {
         return $this->doFormat(
-            $this->converter->toRepublican($input),
+            $this->converter->fromDateTimeInterface($input),
             $format
         );
     }
 
     /**
-     * Formats an already converted RepublicanDateTime
+     * Formats an already converted EgyptianDateTime
      *
-     * @param RepublicanDateTime $input
-     * @param strong             $format @see self::format
+     * @param EgyptianDateTime $input
+     * @param strong           $format @see self::format
      *
      * @return string
      */
-    public function formatRepublican(RepublicanDateTime $input, $format)
+    public function formatEgyptian(EgyptianDateTime $input, $format)
     {
         return $this->doFormat($input, $format);
     }

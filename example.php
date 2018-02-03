@@ -6,8 +6,7 @@ use Popy\Calendar\PresetFormater;
 use Popy\RepublicanCalendar\Formater;
 use Popy\Calendar\Calendar\GregorianCalendar;
 
-$format = 'l jS F y H:i:s, D|F, D, y H:i:s';
-
+$format = 'l jS F y H:i:s, X|F, X, y H:i:s';
 
 $revolutionnary = new PresetFormater(new Formater(), $format);
 $gregorian      = new PresetFormater(new GregorianCalendar(), 'Y-m-d H:i:s');

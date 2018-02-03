@@ -7,8 +7,8 @@ use Popy\Calendar\Formater\LocalisationInterface;
 class HardcodedFrench implements LocalisationInterface
 {
     /**
-     * {@inheritDoc}
-     */
+    * {@inheritDoc}
+    */
     public function getMonthName($month)
     {
         $names = array(
@@ -25,7 +25,7 @@ class HardcodedFrench implements LocalisationInterface
             'Thermidor',
             'Fructidor',
             'Sans-culottides',
-        );
+       );
 
         if (isset($names[$month - 1])) {
             return $names[$month - 1];
@@ -33,9 +33,20 @@ class HardcodedFrench implements LocalisationInterface
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function getWeekDayName($day)
+    * {@inheritDoc}
+    */
+    public function getMonthShortName($month)
+    {
+        // SHould use a multibyte string handler, but there is no such character
+        // in the 3 first chars of month names, and yes, it's a ugly hardcoded
+        // Localisation file.
+        return substr($this->getMonthName($month), 0, 3);
+    }
+
+    /**
+    * {@inheritDoc}
+    */
+    public function getDayName($day)
     {
         $names = array(
             'Primidi',
@@ -50,15 +61,38 @@ class HardcodedFrench implements LocalisationInterface
             'Décadi',
         );
 
+        $type = substr($day, 0, 1);
+        $day = substr($day, 1);
+
+        if ($type === 'y') {
+            return $this->getIndividualDayName($day);
+        }
+
         if (isset($names[$day])) {
             return $names[$day];
         }
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function getDayName($day)
+    * {@inheritDoc}
+    */
+    public function getDayShortName($month)
+    {
+        if (function_exists('mb_substr')) {
+            return mb_substr($this->getDayName($month), 0, 3, 'UTF-8');
+        }
+
+        return substr($this->getDayName($month), 0, 3);
+    }
+
+    /**
+    * Get individual day name.
+    *
+    * @param mixed $day Day identifier.
+    *
+    * @return string|null
+    */
+    public function getIndividualDayName($day)
     {
         $names = array(
             'Raisin',
@@ -427,7 +461,7 @@ class HardcodedFrench implements LocalisationInterface
             'jour de l\'opinion',
             'jour des récompenses',
             'jour de la révolution',
-        );
+            );
 
         if (isset($names[$day])) {
             return $names[$day];
@@ -435,8 +469,8 @@ class HardcodedFrench implements LocalisationInterface
     }
 
     /**
-     * {@inheritDoc}
-     */
+    * {@inheritDoc}
+    */
     public function getNumberOrdinalSuffix($number)
     {
         if ($number == 1) {
