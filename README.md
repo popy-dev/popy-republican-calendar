@@ -14,8 +14,20 @@ The dates conversion handles timezones and DST, which are keeped as regular hour
 jumps, at the same dates/hours than with regular dates, which gives constistency
 in a day.
 
+Other calendars
+---------------
+
+As said earlier, the revolutionary calendar is based on the egyptian one, so it
+is also available in the package, with other variations, with various degrees of
+implementation :
+
+- Egyptian (Converter & partial localisation)
+- Coptic (wip)
+- Ethiopian (wip)
+
 Purpose
 -------
+
 It serves as an example/proof of concept, and as a sandbox. Code is tested there
 and eventually, if it works and is 
 This is an example implementation of popy/calendar interfaces, aswell as a 
@@ -37,8 +49,8 @@ use Popy\RepublicanCalendar\Formater;
 
 $formater = new Formater();
 
-
-echo $calendar->format(new DateTime(), 'Y-m-d');
+echo $calendar->format(new DateTime(), 'Y-m-d') . "\n";
+echo $calendar->format(new DateTime(), 'l jS F y, X|F, X, y H:i:s') . "\n";
 
 ?>
 ```
@@ -48,12 +60,9 @@ Calculation Methods
 
 The initial calendar definition had vague rules on where to insert leap days,
 and it was abandonned before a solution has been decided (or needed). Multiple
-leap days calculators are available :
+leap days calculators are available, in addition with calculator provided by
+popy/calendar :
 
-- Caesar : the julian calendar one. Very imprecise.
-- Modern : the system we are using for standard dates.
-- Futuristic : The more precise system I found on wikipedia, which will proove
-    more precise after the 4th millenium.
 - RommeWithContinuedImpairLeapDay : Wrapps any calculator, but transmit a
     different year value in order to make sure that the leap years will match
     the first 20 years leaps.
@@ -68,10 +77,8 @@ Constructors will defaults on a RommeWithContinuedImpairLeapDay/Modern couple.
 
 use Popy\RepublicanCalendar\Formater;
 use Popy\RepublicanCalendar\Converter\PivotalDate;
-use Popy\Calendar\Converter\LeapYearCalculator\{
-    Futuristic,
-    RommeWithContinuedImpairLeapDay
-};
+use Popy\Calendar\Converter\LeapYearCalculator\Futuristic;
+use Popy\RepublicanCalendar\Converter\LeapYearCalculator\RommeWithContinuedImpairLeapDay;
 
 $calculator = new RommeWithContinuedImpairLeapDay(
     // Lets be prepared for Y4K !

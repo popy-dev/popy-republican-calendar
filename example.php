@@ -4,7 +4,10 @@ require './vendor/autoload.php';
 
 use Popy\Calendar\PresetFormater;
 use Popy\RepublicanCalendar\Formater;
+use Popy\RepublicanCalendar\Formater\SymbolFormater;
 use Popy\Calendar\Calendar\GregorianCalendar;
+use Popy\RepublicanCalendar\Converter\EgyptianPivotalDate;
+use Popy\RepublicanCalendar\Formater\Localisation\EgyptianHardcodedEgyptian;
 
 $format = 'l jS F y H:i:s, X|F, X, y H:i:s';
 
@@ -32,4 +35,16 @@ $dates = [
 
 foreach ($dates as $date) {
     echo $gregorian->format($date) . ' -> ' . $revolutionnary->format($date) . chr(10);
+}
+
+$egyptian = new PresetFormater(
+    new Formater(
+        new EgyptianPivotalDate(),
+        new SymbolFormater(new EgyptianHardcodedEgyptian())
+    ),
+    'Y-m-d / F'
+);
+
+foreach ($dates as $date) {
+    echo $gregorian->format($date) . ' -> ' . $egyptian->format($date) . chr(10);
 }

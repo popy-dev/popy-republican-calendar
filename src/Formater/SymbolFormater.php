@@ -3,7 +3,6 @@
 namespace Popy\RepublicanCalendar\Formater;
 
 use Popy\RepublicanCalendar\FormaterInterface;
-use Popy\Calendar\Formater\LocaleInterface;
 use Popy\Calendar\Formater\Utility\RomanConverter;
 use Popy\RepublicanCalendar\Formater\Localisation\RepublicanHardcodedFrench;
 use Popy\RepublicanCalendar\Converter\DateTimeRepresentation\EgyptianDateTime;
@@ -13,7 +12,7 @@ class SymbolFormater
     /**
      * Locale (used for day & month names)
      *
-     * @var LocaleInterface
+     * @var LocalisationInterface
      */
     protected $locale;
 
@@ -27,10 +26,10 @@ class SymbolFormater
     /**
      * Class constructor.
      *
-     * @param LocaleInterface|null $locale
-     * @param RomanConverter|null  $converter
+     * @param LocalisationInterface|null $locale
+     * @param RomanConverter|null        $converter
      */
-    public function __construct(LocaleInterface $locale = null, RomanConverter $converter = null)
+    public function __construct(LocalisationInterface $locale = null, RomanConverter $converter = null)
     {
         $this->locale = $locale ?: new RepublicanHardcodedFrench();
         $this->converter = $converter ?: new RomanConverter();

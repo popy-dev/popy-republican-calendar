@@ -38,7 +38,7 @@ class EgyptianPivotalDate extends AbstractPivotalDateSolarYear
     {
         parent::__construct(
             $calculator ?: new NoLeap(),
-            $timeConverter ?: new DuoDecimalTime()
+            $timeConverter ?: new DecimalTime()
         );
 
         if ($eraStart !== null) {

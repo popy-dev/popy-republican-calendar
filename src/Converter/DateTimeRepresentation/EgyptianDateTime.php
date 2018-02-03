@@ -11,7 +11,7 @@ use Popy\Calendar\Converter\DateTimeRepresentation\AbstractSolarTime;
  * There are no internal constistency checks !
  */
 class EgyptianDateTime extends AbstractSolarTime
-{   
+{
     /**
      * Month
      *

@@ -2,7 +2,7 @@
 
 namespace Popy\RepublicanCalendar\Formater\Localisation;
 
-use Popy\Calendar\Formater\LocalisationInterface;
+use Popy\RepublicanCalendar\Formater\LocalisationInterface;
 
 class RepublicanHardcodedFrench implements LocalisationInterface
 {
@@ -86,11 +86,7 @@ class RepublicanHardcodedFrench implements LocalisationInterface
     }
 
     /**
-    * Get individual day name.
-    *
-    * @param mixed $day Day identifier.
-    *
-    * @return string|null
+    * {@inheritDoc}
     */
     public function getIndividualDayName($day)
     {
