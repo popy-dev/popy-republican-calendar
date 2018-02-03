@@ -1,10 +1,10 @@
 <?php
 
-namespace Popy\RepublicanCalendar\Formater\Locale;
+namespace Popy\RepublicanCalendar\Formater\Localisation;
 
 use Popy\Calendar\Formater\LocalisationInterface;
 
-class HardcodedFrench implements LocalisationInterface
+class RepublicanHardcodedFrench implements LocalisationInterface
 {
     /**
     * {@inheritDoc}

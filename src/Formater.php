@@ -3,9 +3,9 @@
 namespace Popy\RepublicanCalendar;
 
 use DateTimeInterface;
-use Popy\Calendar\FormaterInterface;
 use Popy\Calendar\ConverterInterface;
 use Popy\Calendar\Formater\FormatLexerTrait;
+use Popy\RepublicanCalendar\Formater\SymbolFormater;
 use Popy\RepublicanCalendar\Converter\RepublicanPivotalDate;
 use Popy\RepublicanCalendar\Converter\DateTimeRepresentation\EgyptianDateTime;
 

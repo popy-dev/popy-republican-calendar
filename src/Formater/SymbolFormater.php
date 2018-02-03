@@ -1,10 +1,11 @@
 <?php
 
-namespace Popy\RepublicanCalendar;
+namespace Popy\RepublicanCalendar\Formater;
 
+use Popy\RepublicanCalendar\FormaterInterface;
 use Popy\Calendar\Formater\LocaleInterface;
 use Popy\Calendar\Formater\Utility\RomanConverter;
-use Popy\RepublicanCalendar\Formater\Locale\HardcodedFrench;
+use Popy\RepublicanCalendar\Formater\Localisation\RepublicanHardcodedFrench;
 use Popy\RepublicanCalendar\Converter\DateTimeRepresentation\EgyptianDateTime;
 
 class SymbolFormater
@@ -31,16 +32,16 @@ class SymbolFormater
      */
     public function __construct(LocaleInterface $locale = null, RomanConverter $converter = null)
     {
-        $this->locale = $locale ?: new HardcodedFrench();
+        $this->locale = $locale ?: new RepublicanHardcodedFrench();
         $this->converter = $converter ?: new RomanConverter();
     }
 
     /**
      * Get a date-format symbol formatted result.
      *
-     * @param EgyptianDateTime $input    Input date.
-     * @param string           $symbol   Symbol.
-     * @param Formater         $formater Formater/Lexer
+     * @param EgyptianDateTime  $input    Input date.
+     * @param string            $symbol   Symbol.
+     * @param FormaterInterface $formater Formater/Lexer
      *
      * Supported symbols : same as date() with :
      *  - X symbol added to match day individual name
@@ -49,7 +50,7 @@ class SymbolFormater
      *
      * @return string|null
      */
-    public function format(EgyptianDateTime $input, $symbol, Formater $formater)
+    public function format(EgyptianDateTime $input, $symbol, FormaterInterface $formater)
     {
         if ($symbol === 'y') {
             // y   A two digit representation of a year
