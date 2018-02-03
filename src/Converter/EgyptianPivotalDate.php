@@ -21,11 +21,11 @@ use Popy\RepublicanCalendar\Converter\DateTimeRepresentation\EgyptianDateTime;
 class EgyptianPivotalDate extends AbstractPivotalDateSolarYear
 {
     /**
-     * Year 1 timestamp.
+     * Year 1 timestamp. (to be confirmed)
      *
-     * -3000-07-19 00:00:00 UTC
+     * -2781-07-19 00:00:00 UTC
      */
-    protected $eraStart = -156820752000;
+    protected $eraStart = -149909875200;
 
     /**
      * Class constructor.

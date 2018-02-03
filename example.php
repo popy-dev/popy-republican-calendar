@@ -42,7 +42,7 @@ $egyptian = new PresetFormater(
         new EgyptianPivotalDate(),
         new SymbolFormater(new EgyptianHardcodedEgyptian())
     ),
-    'Y-m-d / F'
+    'Y-m-d H:i:s / F'
 );
 
 foreach ($dates as $date) {
