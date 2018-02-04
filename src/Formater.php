@@ -4,15 +4,14 @@ namespace Popy\RepublicanCalendar;
 
 use DateTimeInterface;
 use Popy\Calendar\ConverterInterface;
-use Popy\Calendar\Formater\FormatLexerTrait;
+use Popy\Calendar\Parser\FormatLexerInterface;
+use Popy\Calendar\Parser\FormatLexer\MbString;
 use Popy\RepublicanCalendar\Formater\SymbolFormater;
 use Popy\RepublicanCalendar\Converter\RepublicanPivotalDate;
 use Popy\RepublicanCalendar\Converter\DateTimeRepresentation\EgyptianDateTime;
 
 class Formater implements FormaterInterface
 {
-    use FormatLexerTrait;
-
     /**
      * Date converter.
      *
@@ -28,15 +27,23 @@ class Formater implements FormaterInterface
     protected $formater;
 
     /**
+     * Format lexer
+     * 
+     * @var FormatLexerInterface
+     */
+    protected $lexer;
+
+    /**
      * Class constructor.
      *
      * @param SymbolFormater|null     $formater
      * @param ConverterInterface|null $converter
      */
-    public function __construct(ConverterInterface $converter = null, SymbolFormater $formater = null)
+    public function __construct(ConverterInterface $converter = null, SymbolFormater $formater = null, FormatLexerInterface $lexer = null)
     {
         $this->converter = $converter ?: new RepublicanPivotalDate();
-        $this->formater  = $formater  ?: new SymbolFormater();
+        $this->formater  = $formater ?: new SymbolFormater();
+        $this->lexer     = $lexer ?: new MbString();
     }
 
     /**
@@ -48,7 +55,7 @@ class Formater implements FormaterInterface
      */
     public function format(DateTimeInterface $input, $format)
     {
-        return $this->doFormat(
+        return $this->formatEgyptian(
             $this->converter->fromDateTimeInterface($input),
             $format
         );
@@ -64,26 +71,25 @@ class Formater implements FormaterInterface
      */
     public function formatEgyptian(EgyptianDateTime $input, $format)
     {
-        return $this->doFormat($input, $format);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function formatSymbol(&$res, $input, $symbol)
-    {
-        if ($symbol !== '|') {
-            $res .= $this->formater->format($input, $symbol, $this);
-
-            return true;
-        }
-
-        if ($input->getMonth() !== 13) {
-            return false;
-        }
-
-        // Reset formated date and continue
         $res = '';
-        return true;
+        $tokens = $this->lexer->tokenizeFormat($format);
+
+        foreach ($tokens as $token) {
+            if (!$token->is('|')) {
+                $res .= $this->formater->format($input, $token->getSymbol(), $this);
+
+                continue;
+            }
+
+            // Character is a | separating normal format from special month
+            // format. If month is not the special one, formating is done.
+            if ($input->getMonth() !== 13) {
+                return $res;
+            }
+
+            $res = '';
+        }
+
+        return $res;
     }
 }
