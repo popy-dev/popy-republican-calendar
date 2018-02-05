@@ -27,8 +27,8 @@ class RepublicanHardcodedFrench implements LocalisationInterface
             'Sans-culottides',
        );
 
-        if (isset($names[$month - 1])) {
-            return $names[$month - 1];
+        if (isset($names[$month])) {
+            return $names[$month];
         }
     }
 
@@ -62,7 +62,7 @@ class RepublicanHardcodedFrench implements LocalisationInterface
         );
 
         $type = substr($day, 0, 1);
-        $day = substr($day, 1);
+        $day = strpos('0123456789', $type) === false ? substr($day, 1) : $day;
 
         if ($type === 'y') {
             return $this->getIndividualDayName($day);
@@ -76,17 +76,21 @@ class RepublicanHardcodedFrench implements LocalisationInterface
     /**
     * {@inheritDoc}
     */
-    public function getDayShortName($month)
+    public function getDayShortName($day)
     {
         if (function_exists('mb_substr')) {
-            return mb_substr($this->getDayName($month), 0, 3, 'UTF-8');
+            return mb_substr($this->getDayName($day), 0, 3, 'UTF-8');
         }
 
-        return substr($this->getDayName($month), 0, 3);
+        return substr($this->getDayName($day), 0, 3);
     }
 
     /**
-    * {@inheritDoc}
+    * Get days individual name by day index
+    *
+    * @param integer $day
+    *
+    * @return  string|null
     */
     public function getIndividualDayName($day)
     {

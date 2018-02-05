@@ -75,8 +75,19 @@ class Formater implements FormaterInterface
         $tokens = $this->lexer->tokenizeFormat($format);
 
         foreach ($tokens as $token) {
+            // Litteral tokens are returned raw
+            if ($token->isLitteral()) {
+                $res .= $token->getValue();
+                continue;
+            }
+
+            // Non litterals & symbols (only EOF for now)
+            if (!$token->isSymbol()) {
+                break;
+            }
+
             if (!$token->is('|')) {
-                $res .= $this->formater->format($input, $token->getSymbol(), $this);
+                $res .= $this->formater->format($input, $token->getValue(), $this);
 
                 continue;
             }

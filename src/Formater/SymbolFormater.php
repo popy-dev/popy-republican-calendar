@@ -69,12 +69,12 @@ class SymbolFormater
 
         if ($symbol === 'F') {
             // F   A full textual representation of a month, such as January or March
-            return $this->locale->getMonthName($input->getMonth());
+            return $this->locale->getMonthName($input->getMonth() - 1);
         }
 
         if ($symbol === 'M') {
             // M   A short textual representation of a month, three letters    Jan through Dec
-            return $this->locale->getMonthShortName($input->getMonth());
+            return $this->locale->getMonthShortName($input->getMonth() - 1);
         }
 
         if ($symbol === 'm') {
@@ -128,7 +128,7 @@ class SymbolFormater
 
         if ($symbol === 'w') {
             // w   Numeric representation of the day of the week   0 (for Sunday) through 6 (for Saturday)
-            return ($input->getDay() - 1) % 10;
+            return $input->getDayIndex() % 10;
         }
 
         if ($symbol === 'z') {
@@ -143,7 +143,7 @@ class SymbolFormater
 
         if ($symbol === 'W') {
             // W   ISO-8601 week number of year, weeks starting on Monday
-            return $this->format($input, 'z', $formater) % 10;
+            return intval($input->getDayIndex() / 10);
         }
 
         if ($symbol === 'a' || $symbol === 'A') {
@@ -185,7 +185,7 @@ class SymbolFormater
         }
 
         if ($symbol === 'v') {
-            // u   Milliseconds
+            // v   Milliseconds
             return substr($this->format($input, 'u', $formater), 0, 3);
         }
 
@@ -211,7 +211,6 @@ class SymbolFormater
 
         if ($symbol === 'P') {
             // P   Difference to Greenwich time (GMT) with colon between hours and minutes (added in PHP 5.1.3)    Example: +02:00
-            // O   Difference to Greenwich time (GMT) in hours Example: +0200
             return sprintf(
                 '%s%02d:%02d',
                 $input->getOffset() < 0 ? '-' : '+',
@@ -233,7 +232,7 @@ class SymbolFormater
         if ($symbol === 'c') {
             // c   ISO 8601 date (added in PHP 5)  2004-02-12T15:19:21+00:00
             // Would require getting back to the Formater/Lexer with 'Y-m-d\TH:i:sP'
-            return $formater->formatEgyptian($input, 'Y-m-d\TH:i:sP');
+            return $formater->formatEgyptian($input, 'Y-m-d\\TH:i:sP');
         }
 
         if ($symbol === 'r') {
