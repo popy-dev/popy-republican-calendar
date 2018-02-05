@@ -220,9 +220,11 @@ class Parser implements ParserInterface
      */
     protected function determineTime(DateLexerResult $parts)
     {
+        // g & h are assumed non-implemented for now
         // g   12-hour format of an hour without leading zeros 1 through 12
-        // G   24-hour format of an hour without leading zeros 0 through 23
         // h   12-hour format of an hour with leading zeros    01 through 12
+        
+        // G   24-hour format of an hour without leading zeros 0 through 23
         // H   24-hour format of an hour with leading zeros    00 through 23
         // i   Minutes with leading zeros  00 to 59
         // s   Seconds, with leading zeros 00 through 59

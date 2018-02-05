@@ -8,7 +8,7 @@ use Popy\Calendar\ValueObject\DateRepresentation\SolarTime;
 /**
  * Egyptian date representation value object, for internal use.
  *
- * There are no internal constistency checks !
+ * Handles (for now) hardcoded month calculation.
  */
 class EgyptianDateTime extends SolarTime
 {
