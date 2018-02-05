@@ -201,37 +201,35 @@ class SymbolFormater
 
         if ($symbol === 'I') {
             // I (capital i)   Whether or not the date is in daylight saving time  1 if Daylight Saving Time, 0 otherwise.
-            return '{NIY}';
+            return (int)$input->getOffset()->isDst();
         }
 
-        if ($symbol === 'O') {
+        if ($symbol === 'O' || $symbol === 'P') {
             // O   Difference to Greenwich time (GMT) in hours Example: +0200
-            return sprintf(
-                '%s%02d%02d',
-                $input->getOffset() < 0 ? '-' : '+',
-                intval(abs($input->getOffset()) / 3600),
-                intval(abs($input->getOffset())%60 / 60)
-            );
-        }
-
-        if ($symbol === 'P') {
             // P   Difference to Greenwich time (GMT) with colon between hours and minutes (added in PHP 5.1.3)    Example: +02:00
+            $f = '%s%02d%02d';
+            if ($symbol === 'P') {
+                $f = '%s%02d:%02d';
+            }
+
+            $value = intval($input->getOffset()->getValue() / 60);
+
             return sprintf(
-                '%s%02d:%02d',
-                $input->getOffset() < 0 ? '-' : '+',
-                intval(abs($input->getOffset()) / 3600),
-                intval(abs($input->getOffset())%60 / 60)
+                $f,
+                $value < 0 ? '-' : '+',
+                intval(abs($value) / 60),
+                intval(abs($value) % 60)
             );
         }
 
         if ($symbol === 'T') {
             // T   Timezone abbreviation   Examples: EST, MDT ...
-            return '{NIY}';
+            return $input->getOffset()->getAbbreviation();
         }
 
         if ($symbol === 'Z') {
             // Z   Timezone offset in seconds. The offset for timezones west of UTC is always negative, and for those east of UTC is always positive.  -43200 through 50400
-            return $input->getOffset();
+            return (int)$input->getOffset()->getValue();
         }
 
         if ($symbol === 'c') {

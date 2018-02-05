@@ -4,6 +4,7 @@ namespace Popy\RepublicanCalendar;
 
 use DateTimeZone;
 use Popy\Calendar\Converter\Time;
+use Popy\Calendar\Converter\TimeOffset;
 use Popy\Calendar\ParserInterface;
 use Popy\Calendar\ConverterInterface;
 use Popy\Calendar\Parser\DateLexerResult;
@@ -253,29 +254,19 @@ class Parser implements ParserInterface
      *
      * @return DateTimeZone
      */
-    protected function determineTimezone(DateLexerResult $parts, $offset, DateTimeZone $inputTz = null)
+    protected function determineTimezone(DateLexerResult $parts, TimeOffset $offset, DateTimeZone $inputTz = null)
     {
-        // O & P are valid timezones constructor parameter, so use it
-        if (null !== $tz = $parts->getFirst('O', 'P')) {
+        // e   Timezone identifier (added in PHP 5.1.0)    Examples: UTC, GMT, Atlantic/Azores
+        // T   Timezone abbreviation   Examples: EST, MDT ...
+        // O   Difference to Greenwich time (GMT) in hours Example: +0200
+        // P   Difference to Greenwich time (GMT) with colon between hours and minutes (added in PHP 5.1.3)    Example: +02:00
+        if (null !== $tz = $parts->getFirst('e', 'T', 'O', 'P')) {
             return new DateTimeZone($tz);
         }
 
         // Create a fixed timezone matching the offset.
-        if ($offset !== null) {
-            $sign = $offset < 0 ? '-' : '+';
-
-            return new DateTimeZone(sprintf(
-                '%s%02d:%02d',
-                $sign,
-                intval(abs($offset)/3600),
-                intval((abs($offset)%3600) / 60)
-            ));
-        }
-
-        // e   Timezone identifier (added in PHP 5.1.0)    Examples: UTC, GMT, Atlantic/Azores
-        // T   Timezone abbreviation   Examples: EST, MDT ...
-        if (null !== $tz = $parts->getFirst('e', 'T')) {
-            return new DateTimeZone($tz);
+        if (null !== $tz = $offset->buildTimeZone()) {
+            return $tz;
         }
 
         if (null !== $inputTz) {
@@ -289,13 +280,11 @@ class Parser implements ParserInterface
     protected function determineOffset(DateLexerResult $parts)
     {
         // Z   Timezone offset in seconds. The offset for timezones west of UTC is always negative, and for those east of UTC is always positive.  -43200 through 50400
-        if (null !== $o = $parts->get('Z')) {
-            return (int)$o;
-        }
-
-        // O   Difference to Greenwich time (GMT) in hours Example: +0200
-        // P   Difference to Greenwich time (GMT) with colon between hours and minutes (added in PHP 5.1.3)    Example: +02:00
-        if (null !== $o = $parts->getFirst('O', 'P')) {
+        if (null !== $value = $parts->get('Z')) {
+            $value = (int)$value;
+        } elseif (null !== $o = $parts->getFirst('O', 'P')) {
+            // O   Difference to Greenwich time (GMT) in hours Example: +0200
+            // P   Difference to Greenwich time (GMT) with colon between hours and minutes (added in PHP 5.1.3)    Example: +02:00
             $o = str_replace(':', '', $o);
             $sign = substr($o, 0, 1);
             $hours = (int)substr($o, 1, 2);
@@ -308,7 +297,13 @@ class Parser implements ParserInterface
                 $o = -$o;
             }
 
-            return $o;
+            $value = $o;
         }
+
+        return new TimeOffset(
+            $value,
+            $parts->get('I'),
+            $parts->get('T')
+        );
     }
 }
