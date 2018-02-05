@@ -5,7 +5,7 @@ namespace Popy\RepublicanCalendar\Formater;
 use Popy\RepublicanCalendar\FormaterInterface;
 use Popy\Calendar\Formater\Utility\RomanConverter;
 use Popy\RepublicanCalendar\Formater\Localisation\RepublicanHardcodedFrench;
-use Popy\RepublicanCalendar\Converter\DateTimeRepresentation\EgyptianDateTime;
+use Popy\RepublicanCalendar\ValueObject\DateRepresentation\EgyptianDateTime;
 
 class SymbolFormater
 {

@@ -8,7 +8,7 @@ use Popy\Calendar\Converter\LeapYearCalculator\NoLeap;
 use Popy\Calendar\Converter\TimeConverter\DecimalTime;
 use Popy\Calendar\Converter\LeapYearCalculatorInterface;
 use Popy\Calendar\Converter\AbstractPivotalDateSolarYear;
-use Popy\RepublicanCalendar\Converter\DateTimeRepresentation\EgyptianDateTime;
+use Popy\RepublicanCalendar\ValueObject\DateRepresentation\EgyptianDateTime;
 
 /**
  * Egyptian calendar implementation.

@@ -1,9 +1,9 @@
 <?php
 
-namespace Popy\RepublicanCalendar\Converter\DateTimeRepresentation;
+namespace Popy\RepublicanCalendar\ValueObject\DateRepresentation;
 
 use DateTimeZone;
-use Popy\Calendar\Converter\DateTimeRepresentation\SolarTime;
+use Popy\Calendar\ValueObject\DateRepresentation\SolarTime;
 
 /**
  * Egyptian date representation value object, for internal use.

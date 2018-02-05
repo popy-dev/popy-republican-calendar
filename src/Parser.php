@@ -3,14 +3,14 @@
 namespace Popy\RepublicanCalendar;
 
 use DateTimeZone;
-use Popy\Calendar\Converter\Time;
-use Popy\Calendar\Converter\TimeOffset;
+use Popy\Calendar\ValueObject\Time;
+use Popy\Calendar\ValueObject\TimeOffset;
 use Popy\Calendar\ParserInterface;
 use Popy\Calendar\ConverterInterface;
 use Popy\Calendar\Parser\DateLexerResult;
 use Popy\Calendar\Parser\FormatParserInterface;
 use Popy\RepublicanCalendar\Converter\RepublicanPivotalDate;
-use Popy\RepublicanCalendar\Converter\DateTimeRepresentation\EgyptianDateTime;
+use Popy\RepublicanCalendar\ValueObject\DateRepresentation\EgyptianDateTime;
 use Popy\Calendar\Parser\FormatParser\PregExtendedNative as PregExtendedNativeFormatParser;
 use Popy\RepublicanCalendar\Parser\SymbolParser\PregExtendedNative as PregExtendedNativeSymbolParser;
 

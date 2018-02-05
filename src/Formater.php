@@ -8,7 +8,7 @@ use Popy\Calendar\Parser\FormatLexerInterface;
 use Popy\Calendar\Parser\FormatLexer\MbString;
 use Popy\RepublicanCalendar\Formater\SymbolFormater;
 use Popy\RepublicanCalendar\Converter\RepublicanPivotalDate;
-use Popy\RepublicanCalendar\Converter\DateTimeRepresentation\EgyptianDateTime;
+use Popy\RepublicanCalendar\ValueObject\DateRepresentation\EgyptianDateTime;
 
 class Formater implements FormaterInterface
 {

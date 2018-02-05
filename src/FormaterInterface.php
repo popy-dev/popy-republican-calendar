@@ -3,7 +3,7 @@
 namespace Popy\RepublicanCalendar;
 
 use Popy\Calendar\FormaterInterface as CalendarFormaterInterface;
-use Popy\RepublicanCalendar\Converter\DateTimeRepresentation\EgyptianDateTime;
+use Popy\RepublicanCalendar\ValueObject\DateRepresentation\EgyptianDateTime;
 
 /**
  * Extended FormaterInterface.
