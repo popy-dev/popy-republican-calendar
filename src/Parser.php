@@ -3,6 +3,7 @@
 namespace Popy\RepublicanCalendar;
 
 use DateTimeZone;
+use Popy\Calendar\Converter\Time;
 use Popy\Calendar\ParserInterface;
 use Popy\Calendar\ConverterInterface;
 use Popy\Calendar\Parser\DateLexerResult;
@@ -19,6 +20,7 @@ use Popy\RepublicanCalendar\Parser\SymbolParser\PregExtendedNative as PregExtend
  *  - monthes are all 30 days long (after all, that's an Egyptian calendar)
  *  - the last month is the one having less than 30 days (only used as a trick
  *      to determine month when only 't' symbol is available)
+ *  - no am/pm bullshit for now (have to be handled by Time & co)
  *  
  */
 class Parser implements ParserInterface
@@ -58,6 +60,22 @@ class Parser implements ParserInterface
      */
     public function parse($input, $format, DateTimeZone $timezone = null)
     {
+        $date = $this->parseToEgyptian($input, $format, $timezone);
+
+        return $date ? $this->converter->toDateTimeInterface($date) : null;
+    }
+
+    /**
+     * Parses a date string into an EgyptainDate representation.
+     * 
+     * @param string            $input
+     * @param string            $format
+     * @param DateTimeZone|null $timezone
+     * 
+     * @return EgyptianDateTime
+     */
+    public function parseToEgyptian($input, $format, DateTimeZone $timezone = null)
+    {
         if (null === $lexer = $this->formatParser->parseFormat($format)) {
             return null;
         }
@@ -70,20 +88,24 @@ class Parser implements ParserInterface
 
         $res = new EgyptianDateTime(
             $this->determineYear($parts),
-            $this->determineDayIndex($parts),
             (bool)$parts->get('L'), // Not used anyway
-            $this->determineTimezone($parts, $offset, $timezone),
-            $offset
+            $this->determineDayIndex($parts)
         );
 
-        $res = $res->setTime($this->determineTime($parts));
+        return $res
+            // SI Units
+            // U   Seconds since the Unix Epoch (January 1 1970 00:00:00 GMT)
+            // u   Microseconds
+            ->withUnixTime($parts->get('U'))
+            ->withUnixMicroTime($parts->get('u'))
 
-        // U   Seconds since the Unix Epoch (January 1 1970 00:00:00 GMT)  See also time()
-        if (null !== $tstamp = $parts->get('U')) {
-            $res = $res->setTimestamp((int)$tstamp);
-        }
+            // Offset & timezone
+            ->withOffset($offset = $this->determineOffset($parts))
+            ->withTimezone($this->determineTimezone($parts, $offset, $timezone))
 
-        return $this->converter->toDateTimeInterface($res);
+            // Time
+            ->withTime($this->determineTime($parts))
+        ;
     }
 
     /**
@@ -203,32 +225,20 @@ class Parser implements ParserInterface
         // H   24-hour format of an hour with leading zeros    00 through 23
         // i   Minutes with leading zeros  00 to 59
         // s   Seconds, with leading zeros 00 through 59
-        // u   Microseconds
-        $time = [
+        // v   Milliseconds
+        // μ   Microseconds (the u microseconds is used for SI microseconds)
+        $time = new Time([
             $parts->getFirst('g', 'G', 'h', 'H'),
             $parts->get('i'),
             $parts->get('s'),
-            $parts->get('u'),
-        ];
-
-        // v   Milliseconds
-        if ($time[3] === null && null !== $m = $parts->get('v')) {
-            $time[3] = $m * 1000;
-        }
+            $parts->get('v'),
+            $parts->get('μ'),
+        ]);
 
         // B   Swatch Internet time    000 through 999
-        // NIY as we can't determine the time format.
-        // Will probably have to handle Time as an object.
-
-        for ($i=3; $i > -1; $i--) {
-            if ($time[$i] === null) {
-                unset($time[$i]);
-            } else {
-                break;
-            }
+        if (null !== $b = $parts->get('B')) {
+            $time = $time->withRatio((int)$b * 1000);
         }
-
-        $time = array_map('intval', $time);
 
         return $time;
     }

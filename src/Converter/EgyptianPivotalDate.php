@@ -57,19 +57,12 @@ class EgyptianPivotalDate extends AbstractPivotalDateSolarYear
     /**
      * {@inheritDoc}
      */
-    protected function buildDateRepresentation(DateTimeInterface $input, $year, $dayIndex, array $time, $offset)
+    protected function buildDateRepresentation(DateTimeInterface $input, $year, $isLeapYear, $dayIndex)
     {
-        $res = new EgyptianDateTime(
+        return new EgyptianDateTime(
             $year,
-            $dayIndex,
-            $this->calculator->isLeapYear($year),
-            $input->getTimezone(),
-            $offset
+            $isLeapYear,
+            $dayIndex
         );
-
-        return $res
-            ->setTimestamp($input->getTimestamp())
-            ->setTime($time)
-        ;
     }
 }

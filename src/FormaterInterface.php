@@ -7,6 +7,8 @@ use Popy\RepublicanCalendar\Converter\DateTimeRepresentation\EgyptianDateTime;
 
 /**
  * Extended FormaterInterface.
+ *
+ * TODO : Move this into Popy/Calendar with a "formatRepresentation" method ?
  */
 interface FormaterInterface extends CalendarFormaterInterface
 {

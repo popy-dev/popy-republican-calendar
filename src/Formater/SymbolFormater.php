@@ -149,44 +149,49 @@ class SymbolFormater
         if ($symbol === 'a' || $symbol === 'A') {
             // a   Lowercase Ante meridiem and Post meridiem   am or pm
             // A   Uppercase Ante meridiem and Post meridiem   AM or PM
-            return '';
+            return $symbol === 'a' ? 'am' : 'AM';
         }
 
         if ($symbol === 'B') {
             // B   Swatch Internet time    000 through 999
-            return $input->getHours() * 100 + $input->getMinutes();
+            return sprintf('%03d', intval($input->getTime()->getRatio() / 1000));
         }
 
         if ($symbol === 'g' || $symbol === 'G') {
             // g   12-hour format of an hour without leading zeros 1 through 12
             // G   24-hour format of an hour without leading zeros 0 through 23
-            return $input->getHours();
+            return $input->getTime()->get(0);
         }
 
         if ($symbol === 'h' || $symbol === 'H') {
             // h   12-hour format of an hour with leading zeros    01 through 12
             // H   24-hour format of an hour with leading zeros    00 through 23
-            return sprintf('%02d', $input->getHours());
+            return sprintf('%02d', $input->getTime()->get(0));
         }
 
         if ($symbol === 'i') {
             // i   Minutes with leading zeros  00 to 59
-            return sprintf('%02d', $input->getMinutes());
+            return sprintf('%02d', $input->getTime()->get(1));
         }
 
         if ($symbol === 's') {
             // s   Seconds, with leading zeros 00 through 59
-            return sprintf('%02d', $input->getSeconds());
-        }
-
-        if ($symbol === 'u') {
-            // u   Microseconds
-            return str_pad($input->getMicroseconds(), 6, '0', STR_PAD_LEFT);
+            return sprintf('%02d', $input->getTime()->get(2));
         }
 
         if ($symbol === 'v') {
             // v   Milliseconds
-            return substr($this->format($input, 'u', $formater), 0, 3);
+            return sprintf('%03d', intval($input->getTime()->get(3)));
+        }
+
+        if ($symbol === 'µ') {
+            // v   Milliseconds
+            return sprintf('%03d', intval($input->getTime()->get(4)));
+        }
+
+        if ($symbol === 'u') {
+            // u   Microseconds
+            return sprintf('%06d', $input->getUnixMicroTime());
         }
 
         if ($symbol === 'e') {
@@ -243,7 +248,7 @@ class SymbolFormater
 
         if ($symbol === 'U') {
             // U   Seconds since the Unix Epoch (January 1 1970 00:00:00 GMT)  See also time()
-            return $input->getTimestamp();
+            return $input->getUnixTime();
         }
 
         return $symbol;
