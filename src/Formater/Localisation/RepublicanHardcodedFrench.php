@@ -37,10 +37,14 @@ class RepublicanHardcodedFrench implements LocalisationInterface
     */
     public function getMonthShortName($month)
     {
+        if (null === $name = $this->getMonthName($month)) {
+            return;
+        }
+
         // SHould use a multibyte string handler, but there is no such character
         // in the 3 first chars of month names, and yes, it's a ugly hardcoded
         // Localisation file.
-        return substr($this->getMonthName($month), 0, 3);
+        return substr($name, 0, 3);
     }
 
     /**
@@ -78,11 +82,15 @@ class RepublicanHardcodedFrench implements LocalisationInterface
     */
     public function getDayShortName($day)
     {
-        if (function_exists('mb_substr')) {
-            return mb_substr($this->getDayName($day), 0, 3, 'UTF-8');
+        if (null === $name = $this->getDayName($day)) {
+            return;
         }
 
-        return substr($this->getDayName($day), 0, 3);
+        if (function_exists('mb_substr')) {
+            return mb_substr($name, 0, 3, 'UTF-8');
+        }
+
+        return substr($name, 0, 3);
     }
 
     /**
