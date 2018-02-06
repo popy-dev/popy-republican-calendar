@@ -87,18 +87,16 @@ class Parser implements ParserInterface
 
         $offset = $this->determineOffset($parts);
 
-        $res = new EgyptianDateTime(
-            $this->determineYear($parts),
-            (bool)$parts->get('L'), // Not used anyway
-            $this->determineDayIndex($parts)
-        );
-
         return $res
             // SI Units
             // U   Seconds since the Unix Epoch (January 1 1970 00:00:00 GMT)
             // u   Microseconds
             ->withUnixTime($parts->get('U'))
             ->withUnixMicroTime($parts->get('u'))
+
+            // Year & index
+            ->withYear($this->determineYear($parts), $parts->get('L'))
+            ->withDayIndex($this->determineDayIndex($parts), null)
 
             // Offset & timezone
             ->withOffset($offset = $this->determineOffset($parts))

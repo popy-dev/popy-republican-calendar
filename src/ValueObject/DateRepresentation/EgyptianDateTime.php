@@ -25,22 +25,19 @@ class EgyptianDateTime extends SolarTime
      * @var integer
      */
     protected $day;
-    
+
     /**
-     * Class constructor.
-     *
-     * @param integer $year     Year.
-     * @param boolean $isLeap   Is a leap year.
-     * @param integer $dayIndex Day index.
+     * @inheritDoc
      */
-    public function __construct($year, $isLeap, $dayIndex)
+    public function withDayIndex($dayIndex, $eraDayIndex)
     {
-        parent::__construct($year, $isLeap, $dayIndex);
+        $res = parent::withDayIndex($dayIndex, $eraDayIndex);
 
-        $this->month = intval($dayIndex / 30) + 1;
-        $this->day = $dayIndex % 30 + 1;
+        $res->month = intval($dayIndex / 30) + 1;
+        $res->day = $dayIndex % 30 + 1;
+
+        return $res;
     }
-
 
     /**
      * Gets the month number.
