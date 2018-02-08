@@ -8,7 +8,6 @@ use Popy\Calendar\Converter\UnixTimeConverter;
 use Popy\Calendar\Converter\LeapYearCalculator;
 use Popy\RepublicanCalendar\Formater\Localisation;
 use Popy\RepublicanCalendar\Converter\LeapYearCalculator as RCLeapYear;
-use Popy\RepublicanCalendar\Converter\UnixTimeConverter as RCConverter;
 
 use Popy\Calendar\Formater\SymbolFormater;
 use Popy\RepublicanCalendar\Formater\ExtendedAgnosticFormater;
@@ -36,8 +35,8 @@ $converter = new AgnosticConverter(new UnixTimeConverter\Chain([
      * 1792-09-22 00:00:00 UTC
      */
     new UnixTimeConverter\DateSolar($calc, -5594227200),
-    new RCConverter\TriDecimalMonthes($calc),
-    new RCConverter\DecimalWeeks(),
+    new UnixTimeConverter\EqualLengthMonthes($calc, 30),
+    new UnixTimeConverter\SimpleWeeks(10),
     new UnixTimeConverter\Time([10, 100, 100, 1000, 1000]),
 ]));
 
@@ -84,6 +83,7 @@ use Popy\Calendar\PresetFormater;
 use Popy\Calendar\Calendar\GregorianCalendar;
 
 $format = 'l jS F Y H:i:s, X|F, X, Y H:i:s';
+//$format = 'o W N/l H:i:s';
 
 $revolutionnary = new PresetFormater($formater, $format);
 $gregorian      = new PresetFormater(new GregorianCalendar(), 'Y-m-d H:i:s');
@@ -91,11 +91,10 @@ $gregorian      = new PresetFormater(new GregorianCalendar(), 'Y-m-d H:i:s');
 $dates = [
     //new DateTime('900-01-01'),
     // Year 1
-    //new DateTime('1792-09-22 00:00:00'),
+    new DateTime('1792-09-22 00:00:00'),
 
     new DateTime('1811-09-23'),
 
-    /*
     // Sans-culottide day (actually the revolution day, as it's a leap year)
     new DateTime('2016-09-21'),
 
@@ -107,7 +106,6 @@ $dates = [
 
     // Today
     new DateTime(),
-    */
 ];
 
 foreach ($dates as $date) {
