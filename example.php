@@ -11,13 +11,15 @@ use Popy\RepublicanCalendar\Converter\LeapYearCalculator as RCLeapYear;
 use Popy\RepublicanCalendar\Converter\UnixTimeConverter as RCConverter;
 
 use Popy\Calendar\Formater\SymbolFormater;
-use Popy\Calendar\Formater\AgnosticFormater;
+use Popy\RepublicanCalendar\Formater\ExtendedAgnosticFormater;
 use Popy\RepublicanCalendar\Formater\SymbolFormater\ExtendedStandardDateSolar;
 
 use Popy\Calendar\Parser\AgnosticParser;
 use Popy\Calendar\Parser\ResultMapper;
 use Popy\Calendar\Parser\FormatLexer;
-use Popy\Calendar\Parser\FormatParser\PregExtendedNative;
+use Popy\Calendar\Parser\FormatParser;
+use Popy\Calendar\Parser\SymbolParser;
+use Popy\RepublicanCalendar\Parser\SymbolParser\PregExtendedNative;
 
 $calc = new RCLeapYear\RommeWithFixedLeapDay(
     new LeapYearCalculator\Modern(365, 1)
@@ -25,7 +27,7 @@ $calc = new RCLeapYear\RommeWithFixedLeapDay(
 $locale = new Localisation\RepublicanHardcodedFrench();
 
 $converter = new AgnosticConverter(new UnixTimeConverter\Chain([
-    new UnixTimeConverter\GregorianDateFactory(),
+    new UnixTimeConverter\StandardDateFactory(),
     new UnixTimeConverter\Date(),
     new UnixTimeConverter\TimeOffset(),
     /**
@@ -50,19 +52,38 @@ $symbolFormater = new SymbolFormater\Chain([
     new SymbolFormater\Litteral(true),
 ]);
 
-$formater = new AgnosticFormater(
+$formater = new ExtendedAgnosticFormater(
     new FormatLexer\MbString(),
     $converter,
     $symbolFormater
 );
 
+$mappers = new ResultMapper\Chain([
+    new ResultMapper\StandardDateFactory(),
+    new ResultMapper\StandardDate(),
+    new ResultMapper\StandardDateFragmented(),
+    new ResultMapper\StandardDateSolar(),
+    new ResultMapper\StandardDateTime(),
+]);
+
+$parser = new AgnosticParser(
+    new FormatParser\PregExtendedNative(
+        null,
+        new SymbolParser\Chain([
+            new PregExtendedNative($locale),
+            new SymbolParser\PregNative($locale),
+        ])
+    ),
+    $mappers,
+    $converter
+);
+
+$calendar = new ComposedCalendar($formater, $parser);
 
 use Popy\Calendar\PresetFormater;
 use Popy\Calendar\Calendar\GregorianCalendar;
 
-
-
-$format = 'Y-m-d H:i:s l jS F Y H:i:s, X|F, X, y H:i:s';
+$format = 'l jS F Y H:i:s, X|F, X, Y H:i:s';
 
 $revolutionnary = new PresetFormater($formater, $format);
 $gregorian      = new PresetFormater(new GregorianCalendar(), 'Y-m-d H:i:s');
@@ -70,9 +91,11 @@ $gregorian      = new PresetFormater(new GregorianCalendar(), 'Y-m-d H:i:s');
 $dates = [
     //new DateTime('900-01-01'),
     // Year 1
-    new DateTime('1792-09-22 00:00:00'),
+    //new DateTime('1792-09-22 00:00:00'),
 
     new DateTime('1811-09-23'),
+
+    /*
     // Sans-culottide day (actually the revolution day, as it's a leap year)
     new DateTime('2016-09-21'),
 
@@ -84,10 +107,13 @@ $dates = [
 
     // Today
     new DateTime(),
+    */
 ];
 
 foreach ($dates as $date) {
-    echo $gregorian->format($date) . ' -> ' . $revolutionnary->format($date) . chr(10);
+    $f = $revolutionnary->format($date);
+    $p = $calendar->parse($f, $format);
+    echo $gregorian->format($date) . ' -> ' . $gregorian->format($p) . ' -> ' . str_pad($f, 80, ' ', STR_PAD_LEFT) .chr(10);
 }
 
 die();

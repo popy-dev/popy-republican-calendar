@@ -5,13 +5,13 @@ namespace Popy\RepublicanCalendar\Parser\SymbolParser;
 use Popy\Calendar\Parser\FormatToken;
 use Popy\Calendar\Parser\DateLexer\PregSimple;
 use Popy\Calendar\Parser\DateLexer\PregChoice;
+use Popy\Calendar\Parser\SymbolParserInterface;
 use Popy\Calendar\Parser\FormatParserInterface;
-use Popy\Calendar\Parser\SymbolParser\PregNative;
 use Popy\Calendar\Formater\LocalisationInterface;
 use Popy\Calendar\Formater\Utility\RomanConverter;
 use Popy\RepublicanCalendar\Formater\Localisation\RepublicanHardcodedFrench;
 
-class PregExtendedNative extends PregNative
+class PregExtendedNative implements SymbolParserInterface
 {
     /**
      * Locale.
@@ -54,10 +54,8 @@ class PregExtendedNative extends PregNative
 
         if ($token->is('X')) {
             // Added symbol : Day individual name
-            return $this->buildDayIndividualNamesLexer($token);
+            return $this->buildDayIndividualNamesLexer($token->withAlias('z'));
         }
-
-        return parent::parseSymbol($token, $formater);
     }
 
     /**
