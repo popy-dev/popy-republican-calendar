@@ -2,7 +2,7 @@
 
 namespace Popy\RepublicanCalendar\Formater\Localisation;
 
-use Popy\RepublicanCalendar\Formater\LocalisationInterface;
+use Popy\Calendar\Formater\LocalisationInterface;
 
 /**
  * Hardcoded monthes names from the Middle Kingdom era.

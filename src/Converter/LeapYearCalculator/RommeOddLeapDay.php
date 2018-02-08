@@ -10,7 +10,7 @@ use Popy\Calendar\Converter\LeapYearCalculatorInterface;
  * To reproduce this behavior, we just have to apply any calculation method with
  * year + 1
  */
-class RommeWithContinuedImpairLeapDay implements LeapYearCalculatorInterface
+class RommeOddLeapDay implements LeapYearCalculatorInterface
 {
     /**
      * Internal calculation method

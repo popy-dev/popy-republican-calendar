@@ -54,12 +54,12 @@ class ExtendedStandardDateSolar implements SymbolFormaterInterface
         if ($token->is('y')) {
             // y   A two digit representation of a year
             // Pointless, so converting it to roman numbers instead
-            return $this->converter->decimalToRoman($input->getYear());
+            return (string)$this->converter->decimalToRoman($input->getYear());
         }
 
         if ($token->is('X')) {
             // Added symbol : Day individual name
-            return $this->locale->getDayName('y' . $input->getDayIndex());
+            return (string)$this->locale->getDayName('y' . $input->getDayIndex());
         }
     }
 }

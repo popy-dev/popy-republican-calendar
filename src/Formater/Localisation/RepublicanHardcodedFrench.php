@@ -2,7 +2,7 @@
 
 namespace Popy\RepublicanCalendar\Formater\Localisation;
 
-use Popy\RepublicanCalendar\Formater\LocalisationInterface;
+use Popy\Calendar\Formater\LocalisationInterface;
 
 class RepublicanHardcodedFrench implements LocalisationInterface
 {
