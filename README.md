@@ -7,8 +7,7 @@ additional days which has been inspired from the Egyptian calendar.
 
 Date convertors are no longer inspired from [caarmen's work](https://github.com/caarmen/french-revolutionary-calendar)
 but her work helped me a lot to wrap my head around all the difficulties of
-date conversion, so some of my earlier implementation may stay a while as a
-tribute (but won't be maintained).
+date conversion.
 
 The dates conversion handles timezones and DST, which are keeped as regular hour
 jumps, at the same dates/hours than with regular dates, which gives constistency
@@ -17,13 +16,13 @@ in a day.
 Other calendars
 ---------------
 
-As said earlier, the revolutionary calendar is based on the egyptian one, so it
-is also available in the package, with other variations, with various degrees of
-implementation :
+As said earlier, the revolutionary calendar is based on the egyptian one, so the
+```CalendarFactory``` have a dedicated ```buildEgyptian``` method that initializes
+an Egyptian calendar, just using configuration (but this is achievable with only the popy/calendar
+package). Some egyptian calendar variations may be added aswell :
 
-- Egyptian (Converter & partial localisation)
-- Coptic (wip)
-- Ethiopian (wip)
+- Coptic
+- Ethiopian
 
 Purpose
 -------
@@ -32,22 +31,26 @@ It serves as an example/proof of concept, and as a sandbox. Code is tested there
 and eventually, if it works and is 
 This is an example implementation of popy/calendar interfaces, aswell as a 
 sandbox (who said litter) and improvement lab.
-Most of popy/calendar tools and interfaces originate from thsi repository.
+Most of popy/calendar tools and interfaces originate from this repository.
 
 Usage
 -----
 
-Every class constructor is callable without arguments, and will build their
-dependencies if needed.
+The easiest way to get a proper republican calendar is to use the configurable factory.
 
-Usage is basicall the same as any popy/php-calendar implementation :
+Usage is basically the same as any popy/php-calendar implementation, with few additions :
+- ```X``` will output the day individual name
+- ```|``` seperates 2 alternatives, the first is used for regular date, the second alternative,
+    if present, is used for the complementary day.
 
 ```php
 <?php
 
-use Popy\RepublicanCalendar\Formater;
+use Popy\RepublicanCalendar\Factory\CalendarFactory;
 
-$formater = new Formater();
+$factory = new CalendarFactory();
+
+$calendar = $factory->buildRepublican();
 
 echo $calendar->format(new DateTime(), 'Y-m-d') . "\n";
 echo $calendar->format(new DateTime(), 'l jS F y, X|F, X, y H:i:s') . "\n";
@@ -63,29 +66,29 @@ and it was abandonned before a solution has been decided (or needed). Multiple
 leap days calculators are available, in addition with calculator provided by
 popy/calendar :
 
-- RommeWithContinuedImpairLeapDay : Wrapps any calculator, but transmit a
+- RommeOddLeapDay : Wrapps any calculator, but transmit a
     different year value in order to make sure that the leap years will match
     the first 20 years leaps.
 - RommeWithFixedLeapDay : wrapps any calculator, will transmit a different year
     during the first 20 years (same reason than above) then will become
     transparent.
 
-Constructors will defaults on a RommeWithContinuedImpairLeapDay/Modern couple.
+CalendarFactory will defaults on a RommeOddLeapDay/Modern couple.
 
 ```php
 <?php
 
-use Popy\RepublicanCalendar\Formater;
-use Popy\RepublicanCalendar\Converter\PivotalDate;
-use Popy\Calendar\Converter\LeapYearCalculator\Futuristic;
-use Popy\RepublicanCalendar\Converter\LeapYearCalculator\RommeWithContinuedImpairLeapDay;
+use Popy\RepublicanCalendar\Factory\CalendarFactory;
 
-$calculator = new RommeWithContinuedImpairLeapDay(
-    // Lets be prepared for Y4K !
-    new Futuristic()
-);
+$factory = new CalendarFactory();
 
-$formater = new Formater(new PivotalDate($calculator, null));
+$calendar = $factory->buildRepublican([
+    // Lets use a better leap year calculator
+    'leap' => 'futuristic',
+
+    // Will wrap it with RommeWithFixedLeapDay
+    'leap_wrapper' => 'fixed',
+]);
 
 echo $calendar->format(new DateTime(), 'Y-m-d');
 
@@ -104,7 +107,7 @@ time, they didn't have smartwatches able to upgrade their apps. Dark times.)
 So, depending on how revolutionnary you feel, you can use one format or another,
 by injecting the TimeConvertor suiting your needs.
 
-Components will usually default to the actual DuoDecimal representation.
+CalendarFactory will default to the actual DuoDecimal representation.
 
 Trivia : The Chinese time system divided the day in 100 equal parts (ke) of
 14 minutes 24seconds, which is very close of our quarter hour, and matches
@@ -114,19 +117,15 @@ interoperability ?
 ```php
 <?php
 
-use Popy\RepublicanCalendar\Formater;
-use Popy\RepublicanCalendar\Converter\PivotalDate;
-use Popy\Calendar\Converter\TimeConverter\{DecimalTime,DuoDecimalTime};
+use Popy\RepublicanCalendar\Factory\CalendarFactory;
 
-$timeConverter = $yourRevolutionaryLevel > 9000
-    ? new DecimalTime()
-    : new DuoDecimalTime()
-;
+$factory = new CalendarFactory();
 
-$formater = new Formater(new PivotalDate(null, $timeConverter));
+$calendar = $factory->buildRepublican([
+    'time_format' => $yourRevolutionaryLevel > 9000 ? 'decimal' : 'duodecimal',
+]);
 
-
-echo $calendar->format(new DateTime(), 'Y-m-d');
+echo $calendar->format(new DateTime(), 'Y-m-d H:i:s');
 
 ?>
 ```
