@@ -9,7 +9,6 @@ use Popy\RepublicanCalendar\Factory\CalendarFactory;
 $factory = new CalendarFactory();
 $republicanCalendar = $factory->buildRepublican();
 
-
 $format = 'l jS F Y H:i:s, X|F, X, Y H:i:s';
 //$format = 'o W N/l H:i:s';
 
@@ -39,9 +38,11 @@ $dates = [
 foreach ($dates as $date) {
     $f = $revolutionnary->format($date);
     $p = $republicanCalendar->parse($f, $format);
-    echo $gregorian->format($date) . ' -> ' . $gregorian->format($p) . ' -> ' . str_pad($f, 80, ' ', STR_PAD_LEFT) .chr(10);
+    echo $gregorian->format($date) . ' -> ' . $gregorian->format($p) . ' -> ' . str_pad($f, 80, ' ', STR_PAD_LEFT) . "\n";
 }
+echo "\n";
 
+$format = 'd F Y H:i:s';
 $egyptian = new PresetFormater($factory->buildEgyptian(), $format);
 
 foreach ($dates as $date) {
