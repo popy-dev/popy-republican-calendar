@@ -95,6 +95,41 @@ echo $calendar->format(new DateTime(), 'Y-m-d');
 ?>
 ```
 
+Format alternatives
+-------------------
+
+popy/republican-calendar brings a special formatter that will use a format alternative, if given,
+to format the egyptian complementary month, using a | as separator, mirroring the behaviour of the
+popy/calendar native format parser (which means the same format string can be used to format, then
+parse the date, and will match both alternatives).
+
+```php
+<?php
+
+use Popy\RepublicanCalendar\Factory\CalendarFactory;
+
+$factory = new CalendarFactory();
+
+$calendar = $factory->buildRepublican();
+
+$format = 'l jS F Y, X|F, X, Y';
+
+// WIll output "Primidi 1e Vendémiaire 0001, Raisin"
+echo $calendar->format(new DateTime('1792-09-22 00:00:00'), $format) . "\n";
+// Will output "Sans-culottides, jour de la révolution, 0019"
+echo $calendar->format(new DateTime('1811-09-23 00:00:00'), $format) . "\n";
+
+// Will output 1792-09-22
+echo $calendar->parse('Primidi 1e Vendémiaire 0001, Raisin', $format)
+    ->format('Y-m-d') . "\n"
+;
+// Will output 1811-09-23
+echo $calendar->parse('Sans-culottides, jour de la révolution, 0019', $format)
+    ->format('Y-m-d') . "\n"
+;
+?>
+```
+
 Time formats
 ------------
 

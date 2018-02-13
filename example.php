@@ -9,7 +9,7 @@ use Popy\RepublicanCalendar\Factory\CalendarFactory;
 $factory = new CalendarFactory();
 $republicanCalendar = $factory->buildRepublican();
 
-$format = 'l jS F y H:i:s, X|F, X, Y H:i:s';
+$format = 'l jS F Y H:i:s, X|F, X, Y H:i:s';
 //$format = 'o W N/l H:i:s';
 
 $revolutionnary = new PresetFormatter($republicanCalendar, $format);
@@ -20,9 +20,9 @@ $dates = [
     // Year 1
     new DateTime('1792-09-22 00:00:00'),
 
+    // Sans-culottide day (actually the revolution day, as it's a leap year
     new DateTime('1811-09-23'),
-
-    // Sans-culottide day (actually the revolution day, as it's a leap year)
+)
     new DateTime('2016-09-21'),
 
     // First day of year 225
