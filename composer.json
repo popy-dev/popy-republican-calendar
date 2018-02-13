@@ -12,10 +12,13 @@
     "require": {
         "popy/calendar": "dev-master"
     },
+    "require-dev": {
+        "phpunit/phpunit": "^5.7"
+    },
     "autoload": {
-        "psr-4": {
-            "Popy\\RepublicanCalendar\\": "src/",
-            "Popy\\RepublicanCalendar\\Tests\\": "tests/"
-        }
+        "psr-4": { "Popy\\RepublicanCalendar\\": "src/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "Popy\\RepublicanCalendar\\Tests\\": "tests/" }
     }
 }

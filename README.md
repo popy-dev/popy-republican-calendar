@@ -13,6 +13,8 @@ The dates conversion handles timezones and DST, which are keeped as regular hour
 jumps, at the same dates/hours than with regular dates, which gives constistency
 in a day.
 
+[![Build Status](https://api.travis-ci.org/popy-dev/popy-republican-calendar.svg?branch=master)](https://travis-ci.org/popy-dev/popy-republican-calendar)
+
 Other calendars
 ---------------
 
