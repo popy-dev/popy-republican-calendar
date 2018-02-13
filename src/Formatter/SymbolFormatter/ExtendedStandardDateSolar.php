@@ -4,12 +4,11 @@ namespace Popy\RepublicanCalendar\Formatter\SymbolFormatter;
 
 use Popy\Calendar\FormatterInterface;
 use Popy\Calendar\Parser\FormatToken;
-use Popy\Calendar\Formatter\Utility\RomanConverter;
 use Popy\Calendar\Formatter\SymbolFormatterInterface;
 use Popy\Calendar\Formatter\LocalisationInterface;
+use Popy\Calendar\Formatter\NumberConverterInterface;
 use Popy\Calendar\ValueObject\DateRepresentationInterface;
 use Popy\Calendar\ValueObject\DateSolarRepresentationInterface;
-use Popy\RepublicanCalendar\Formatter\Localisation\RepublicanHardcodedFrench;
 
 /**
  * Extended standard format, handling DateSolarRepresentationInterface.
@@ -26,20 +25,20 @@ class ExtendedStandardDateSolar implements SymbolFormatterInterface
     /**
      * Roman number convertor.
      *
-     * @var RomanConverter
+     * @var NumberConverterInterface
      */
     protected $converter;
 
     /**
      * Class constructor.
      *
-     * @param LocalisationInterface|null $locale
-     * @param RomanConverter|null        $converter
+     * @param LocalisationInterface    $locale
+     * @param NumberConverterInterface $converter
      */
-    public function __construct(LocalisationInterface $locale = null, RomanConverter $converter = null)
+    public function __construct(LocalisationInterface $locale, NumberConverterInterface $converter)
     {
-        $this->locale = $locale ?: new RepublicanHardcodedFrench();
-        $this->converter = $converter ?: new RomanConverter();
+        $this->locale = $locale;
+        $this->converter = $converter;
     }
 
     /**
@@ -54,7 +53,7 @@ class ExtendedStandardDateSolar implements SymbolFormatterInterface
         if ($token->is('y')) {
             // y   A two digit representation of a year
             // Pointless, so converting it to roman numbers instead
-            return (string)$this->converter->decimalToRoman($input->getYear());
+            return (string)$this->converter->to($input->getYear());
         }
 
         if ($token->is('X')) {

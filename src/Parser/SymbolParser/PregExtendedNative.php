@@ -8,8 +8,7 @@ use Popy\Calendar\Parser\DateLexer\PregChoice;
 use Popy\Calendar\Parser\SymbolParserInterface;
 use Popy\Calendar\Parser\FormatParserInterface;
 use Popy\Calendar\Formatter\LocalisationInterface;
-use Popy\Calendar\Formatter\Utility\RomanConverter;
-use Popy\RepublicanCalendar\Formatter\Localisation\RepublicanHardcodedFrench;
+use Popy\Calendar\Formatter\NumberConverterInterface;
 
 class PregExtendedNative implements SymbolParserInterface
 {
@@ -23,20 +22,20 @@ class PregExtendedNative implements SymbolParserInterface
     /**
      * Roman number convertor.
      *
-     * @var RomanConverter
+     * @var NumberConverterInterface
      */
     protected $converter;
 
     /**
      * Class constructor.
      *
-     * @param LocalisationInterface|null $locale
-     * @param RomanConverter|null        $converter
+     * @param LocalisationInterface    $locale
+     * @param NumberConverterInterface $converter
      */
-    public function __construct(LocalisationInterface $locale = null, RomanConverter $converter = null)
+    public function __construct(LocalisationInterface $locale, NumberConverterInterface $converter)
     {
-        $this->locale = $locale ?: new RepublicanHardcodedFrench();
-        $this->converter = $converter ?: new RomanConverter();
+        $this->locale = $locale;
+        $this->converter = $converter;
     }
 
     /**
@@ -78,8 +77,8 @@ class PregExtendedNative implements SymbolParserInterface
         return new PregChoice($token, $choices);
     }
 
-    public function parseRomanCallback($lexer, $res)
+    public function parseRomanCallback(PregSimple $lexer, $res)
     {
-        return $this->converter->romanToDecimal($res);
+        return $this->converter->from($res);
     }
 }

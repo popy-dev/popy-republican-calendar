@@ -14,25 +14,26 @@ use Popy\RepublicanCalendar\Formatter\SymbolFormatter\ExtendedStandardDateSolar;
 class CalendarFactory extends ConfigurableFactory
 {
     /**
-     * Available values for option "locale".
-     *
-     * @var array<string>
-     */
-    protected static $locale = [
-        'republican_french' => Localisation\RepublicanHardcodedFrench::class,
-        'egyptian_egyptian' => Localisation\EgyptianHardcodedEgyptian::class,
-    ];
-
-    /**
      * Available values for option "leap_wrapper".
      *
      * @var array<string>
      */
-    protected static $leapWrappers = [
+    protected $leapWrappers = [
         'none'  => false,
         'fixed' => LeapYearCalculator\RommeWithFixedLeapDay::class,
         'odd'   => LeapYearCalculator\RommeOddLeapDay::class,
     ];
+
+    /**
+     * Class constructor.
+     */
+    public function __construct()
+    {
+        $this->locale += [
+            'republican_french' => Localisation\RepublicanHardcodedFrench::class,
+            'egyptian_egyptian' => Localisation\EgyptianHardcodedEgyptian::class,
+        ];
+    }
 
     public function buildRepublican(array $options = array())
     {
@@ -54,6 +55,7 @@ class CalendarFactory extends ConfigurableFactory
             'leap_wrapper' => 'odd',
             'time_ranges' => 'decimal',
             'locale' => 'republican_french',
+            'number' => 'roman',
         ];
 
         return $this->build($options);
@@ -91,7 +93,7 @@ class CalendarFactory extends ConfigurableFactory
         $wrapper = $this->getOptionValueChoice(
             $options,
             'leap_wrapper',
-            static::$leapWrappers,
+            $this->leapWrappers,
             'none'
         );
 
@@ -111,7 +113,7 @@ class CalendarFactory extends ConfigurableFactory
         $internal = parent::buildSymbolFormatter($options);
 
         return new SymbolFormatter\Chain([
-            new ExtendedStandardDateSolar($options['locale']),
+            new ExtendedStandardDateSolar($options['locale'], $options['number_converter']),
             $internal,
         ]);
     }
@@ -128,7 +130,7 @@ class CalendarFactory extends ConfigurableFactory
     protected function buildSymbolParser(array &$options)
     {
         return new SymbolParser\Chain([
-            new PregExtendedNative($options['locale']),
+            new PregExtendedNative($options['locale'], $options['number_converter']),
             parent::buildSymbolParser($options),
         ]);
     }
