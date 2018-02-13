@@ -1,12 +1,12 @@
 <?php
 
-namespace Popy\RepublicanCalendar\Formater;
+namespace Popy\RepublicanCalendar\Formatter;
 
-use Popy\Calendar\Formater\AgnosticFormater;
+use Popy\Calendar\Formatter\AgnosticFormatter;
 use Popy\Calendar\ValueObject\DateRepresentationInterface;
 use Popy\Calendar\ValueObject\DateSolarRepresentationInterface;
 
-class ExtendedAgnosticFormater extends AgnosticFormater
+class ExtendedAgnosticFormatter extends AgnosticFormatter
 {
     /**
      * @inheritDoc
@@ -32,7 +32,7 @@ class ExtendedAgnosticFormater extends AgnosticFormater
                 break;
             }
 
-            $res .= $this->formater->formatSymbol($input, $token, $this);
+            $res .= $this->formatter->formatSymbol($input, $token, $this);
         }
 
         return $res;

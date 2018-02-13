@@ -2,17 +2,14 @@
 
 namespace Popy\RepublicanCalendar\Factory;
 
-use Popy\Calendar\Factory\ConfigurableFactory;
-
-use Popy\RepublicanCalendar\Formater\Localisation;
-use Popy\RepublicanCalendar\Converter\LeapYearCalculator;
-
-use Popy\Calendar\Formater\SymbolFormater;
-use Popy\RepublicanCalendar\Formater\ExtendedAgnosticFormater;
-use Popy\RepublicanCalendar\Formater\SymbolFormater\ExtendedStandardDateSolar;
-
 use Popy\Calendar\Parser\SymbolParser;
+use Popy\Calendar\Formatter\SymbolFormatter;
+use Popy\Calendar\Factory\ConfigurableFactory;
+use Popy\RepublicanCalendar\Formatter\Localisation;
+use Popy\RepublicanCalendar\Converter\LeapYearCalculator;
+use Popy\RepublicanCalendar\Formatter\ExtendedAgnosticFormatter;
 use Popy\RepublicanCalendar\Parser\SymbolParser\PregExtendedNative;
+use Popy\RepublicanCalendar\Formatter\SymbolFormatter\ExtendedStandardDateSolar;
 
 class CalendarFactory extends ConfigurableFactory
 {
@@ -109,22 +106,22 @@ class CalendarFactory extends ConfigurableFactory
         return new $wrapper($leap);
     }
 
-    protected function buildSymbolFormater(array &$options)
+    protected function buildSymbolFormatter(array &$options)
     {
-        $internal = parent::buildSymbolFormater($options);
+        $internal = parent::buildSymbolFormatter($options);
 
-        return new SymbolFormater\Chain([
+        return new SymbolFormatter\Chain([
             new ExtendedStandardDateSolar($options['locale']),
             $internal,
         ]);
     }
 
-    protected function buildFormater(array &$options)
+    protected function buildFormatter(array &$options)
     {
-        return new ExtendedAgnosticFormater(
+        return new ExtendedAgnosticFormatter(
             $options['lexer'],
             $options['converter'],
-            $options['symbol_formater']
+            $options['symbol_formatter']
         );
     }
 

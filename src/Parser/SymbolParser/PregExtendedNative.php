@@ -7,9 +7,9 @@ use Popy\Calendar\Parser\DateLexer\PregSimple;
 use Popy\Calendar\Parser\DateLexer\PregChoice;
 use Popy\Calendar\Parser\SymbolParserInterface;
 use Popy\Calendar\Parser\FormatParserInterface;
-use Popy\Calendar\Formater\LocalisationInterface;
-use Popy\Calendar\Formater\Utility\RomanConverter;
-use Popy\RepublicanCalendar\Formater\Localisation\RepublicanHardcodedFrench;
+use Popy\Calendar\Formatter\LocalisationInterface;
+use Popy\Calendar\Formatter\Utility\RomanConverter;
+use Popy\RepublicanCalendar\Formatter\Localisation\RepublicanHardcodedFrench;
 
 class PregExtendedNative implements SymbolParserInterface
 {
@@ -42,7 +42,7 @@ class PregExtendedNative implements SymbolParserInterface
     /**
      * @inheritDoc
      */
-    public function parseSymbol(FormatToken $token, FormatParserInterface $formater)
+    public function parseSymbol(FormatToken $token, FormatParserInterface $formatter)
     {
         if ($token->is('y')) {
             // Roman year

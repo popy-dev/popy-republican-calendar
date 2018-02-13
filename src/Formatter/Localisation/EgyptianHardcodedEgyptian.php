@@ -1,8 +1,8 @@
 <?php
 
-namespace Popy\RepublicanCalendar\Formater\Localisation;
+namespace Popy\RepublicanCalendar\Formatter\Localisation;
 
-use Popy\Calendar\Formater\LocalisationInterface;
+use Popy\Calendar\Formatter\LocalisationInterface;
 
 /**
  * Hardcoded monthes names from the Middle Kingdom era.

@@ -1,20 +1,20 @@
 <?php
 
-namespace Popy\RepublicanCalendar\Formater\SymbolFormater;
+namespace Popy\RepublicanCalendar\Formatter\SymbolFormatter;
 
-use Popy\Calendar\FormaterInterface;
+use Popy\Calendar\FormatterInterface;
 use Popy\Calendar\Parser\FormatToken;
-use Popy\Calendar\Formater\Utility\RomanConverter;
-use Popy\Calendar\Formater\SymbolFormaterInterface;
-use Popy\Calendar\Formater\LocalisationInterface;
+use Popy\Calendar\Formatter\Utility\RomanConverter;
+use Popy\Calendar\Formatter\SymbolFormatterInterface;
+use Popy\Calendar\Formatter\LocalisationInterface;
 use Popy\Calendar\ValueObject\DateRepresentationInterface;
 use Popy\Calendar\ValueObject\DateSolarRepresentationInterface;
-use Popy\RepublicanCalendar\Formater\Localisation\RepublicanHardcodedFrench;
+use Popy\RepublicanCalendar\Formatter\Localisation\RepublicanHardcodedFrench;
 
 /**
  * Extended standard format, handling DateSolarRepresentationInterface.
  */
-class ExtendedStandardDateSolar implements SymbolFormaterInterface
+class ExtendedStandardDateSolar implements SymbolFormatterInterface
 {
     /**
      * Locale (used for day & month names)
@@ -45,7 +45,7 @@ class ExtendedStandardDateSolar implements SymbolFormaterInterface
     /**
      * @inheritDoc
      */
-    public function formatSymbol(DateRepresentationInterface $input, FormatToken $token, FormaterInterface $formater)
+    public function formatSymbol(DateRepresentationInterface $input, FormatToken $token, FormatterInterface $formatter)
     {
         if (!$input instanceof DateSolarRepresentationInterface) {
             return;
