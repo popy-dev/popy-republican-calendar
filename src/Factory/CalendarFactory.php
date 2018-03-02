@@ -86,9 +86,9 @@ class CalendarFactory extends ConfigurableFactory
         return $this->build($options);
     }
 
-    protected function buildLeapCalculator(array &$options)
+    protected function getLeap(array &$options)
     {
-        $leap = parent::buildLeapCalculator($options);
+        $leap = parent::getLeap($options);
 
         $wrapper = $this->getOptionValueChoice(
             $options,
@@ -108,30 +108,30 @@ class CalendarFactory extends ConfigurableFactory
         return new $wrapper($leap);
     }
 
-    protected function buildSymbolFormatter(array &$options)
+    protected function getSymbolFormatter(array &$options)
     {
-        $internal = parent::buildSymbolFormatter($options);
+        $internal = parent::getSymbolFormatter($options);
 
         return new SymbolFormatter\Chain([
-            new ExtendedStandardDateSolar($options['locale'], $options['number_converter']),
+            new ExtendedStandardDateSolar($this->get('locale', $options), $this->get('number_converter', $options)),
             $internal,
         ]);
     }
 
-    protected function buildFormatter(array &$options)
+    protected function getFormatter(array &$options)
     {
         return new ExtendedAgnosticFormatter(
-            $options['lexer'],
-            $options['converter'],
-            $options['symbol_formatter']
+            $this->get('lexer', $options),
+            $this->get('converter', $options),
+            $this->get('symbol_formatter', $options)
         );
     }
 
-    protected function buildSymbolParser(array &$options)
+    protected function getSymbolParser(array &$options)
     {
         return new SymbolParser\Chain([
-            new PregExtendedNative($options['locale'], $options['number_converter']),
-            parent::buildSymbolParser($options),
+            new PregExtendedNative($this->get('locale', $options), $this->get('number_converter', $options)),
+            parent::getSymbolParser($options),
         ]);
     }
 }

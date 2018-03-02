@@ -22,7 +22,7 @@ $dates = [
 
     // Sans-culottide day (actually the revolution day, as it's a leap year
     new DateTime('1811-09-23'),
-)
+
     new DateTime('2016-09-21'),
 
     // First day of year 225

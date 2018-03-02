@@ -2,12 +2,14 @@
     "name": "popy/republican-calendar",
     "description": "Republican calendar library",
     "type": "library",
+    "license": "MIT",
     "authors": [
         {
             "name": "Pierre Dudoret",
             "email": "pierre.dudoret@potogan.fr"
         }
     ],
+    "keywords": ["date", "datetime", "calendar", "republican", "revolutionary"],
     "minimum-stability": "dev",
     "require": {
         "popy/calendar": "dev-master"
