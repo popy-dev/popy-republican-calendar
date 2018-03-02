@@ -16,7 +16,7 @@ class CalendarFactory extends ConfigurableFactory
     /**
      * Available values for option "leap_wrapper".
      *
-     * @var array<string>
+     * @var array<string, mixed>
      */
     protected $leapWrappers = [
         'none'  => false,

@@ -45,6 +45,8 @@ class PregExtendedNative implements SymbolParserInterface
     {
         if ($token->is('y')) {
             // Roman year
+            // TODO : here we are assuming the number format, while any number
+            // converter could have been injected.
             $lexer = new PregSimple($token, '-?[MCDLXVI]+');
             $lexer->setCallback(array($this, 'parseRomanCallback'));
 
@@ -60,7 +62,6 @@ class PregExtendedNative implements SymbolParserInterface
     /**
      * Builds a choice lexer based on a get*name localisation method.
      *
-     * @param string      $x     Method name middle part.
      * @param FormatToken $token Token.
      * 
      * @return PregChoice
@@ -77,6 +78,14 @@ class PregExtendedNative implements SymbolParserInterface
         return new PregChoice($token, $choices);
     }
 
+    /**
+     * Callable callback accessing internal converter.
+     *
+     * @param PregSimple $lexer Lexer matching the number.
+     * @param string     $res   Number representation.
+     *
+     * @return integer|string|null
+     */
     public function parseRomanCallback(PregSimple $lexer, $res)
     {
         return $this->converter->from($res);

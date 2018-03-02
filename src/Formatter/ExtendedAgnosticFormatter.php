@@ -4,7 +4,7 @@ namespace Popy\RepublicanCalendar\Formatter;
 
 use Popy\Calendar\Formatter\AgnosticFormatter;
 use Popy\Calendar\ValueObject\DateRepresentationInterface;
-use Popy\Calendar\ValueObject\DateSolarRepresentationInterface;
+use Popy\Calendar\ValueObject\DateFragmentedRepresentationInterface;
 
 class ExtendedAgnosticFormatter extends AgnosticFormatter
 {
@@ -20,7 +20,7 @@ class ExtendedAgnosticFormatter extends AgnosticFormatter
             // Handling of a special token |
             if ($token->is('|')) {
                 if (
-                    $input instanceof DateSolarRepresentationInterface
+                    $input instanceof DateFragmentedRepresentationInterface
                     && $input->getDateParts()->get(0) === 12
                 ) {
                     // 13rd 'fake' month : reset result, in order to use this alterative format

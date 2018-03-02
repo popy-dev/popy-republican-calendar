@@ -53,7 +53,7 @@ class ExtendedStandardDateSolar implements SymbolFormatterInterface
         if ($token->is('y')) {
             // y   A two digit representation of a year
             // Pointless, so converting it to roman numbers instead
-            return (string)$this->converter->to($input->getYear());
+            return $this->converter->to($input->getYear() ?: 0);
         }
 
         if ($token->is('X')) {
