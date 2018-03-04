@@ -3,28 +3,28 @@
 namespace Popy\RepublicanCalendar\Converter\LeapYearCalculator;
 
 use Popy\Calendar\Converter\LeapYearCalculator\Modern;
-use Popy\Calendar\Converter\LeapYearCalculatorInterface;
+use Popy\Calendar\Converter\CompleteLeapYearCalculatorInterface;
 
 /**
  * During the revolutionary calendar lifetime, leap years where 3, 7, 11, 15, 19
  * To reproduce this behavior, we just have to apply any calculation method with
  * year + 1
  */
-class RommeOddLeapDay implements LeapYearCalculatorInterface
+class RommeOddLeapDay implements CompleteLeapYearCalculatorInterface
 {
     /**
      * Internal calculation method
      *
-     * @var LeapYearCalculatorInterface
+     * @var CompleteLeapYearCalculatorInterface
      */
     protected $internal;
 
     /**
      * Class constructor.
      *
-     * @param LeapYearCalculatorInterface|null $internal
+     * @param CompleteLeapYearCalculatorInterface|null $internal
      */
-    public function __construct(LeapYearCalculatorInterface $internal = null)
+    public function __construct(CompleteLeapYearCalculatorInterface $internal = null)
     {
         $this->internal = $internal ?: new Modern();
     }
