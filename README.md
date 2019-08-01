@@ -64,7 +64,7 @@ Calculation Methods
 -------------------
 
 The initial calendar definition had vague rules on where to insert leap days,
-and it was abandonned before a solution has been decided (or needed). Multiple
+and it was abandoned before a solution has been decided (or needed). Multiple
 leap days calculators are available, in addition with calculator provided by
 popy/calendar :
 
@@ -137,7 +137,7 @@ Time formats
 
 The French Republican/Revolutionary calendar initially came with a decimal time
 format (10h, 100m, 100s) just as the egyption inspiration, replacing the
-duodecimal format (24h, 60m, 60s), but was quickly abandonned, probably because
+duodecimal format (24h, 60m, 60s), but was quickly abandoned, probably because
 of the difficuly and cost to replace every clock in the country (because at that
 time, they didn't have smartwatches able to upgrade their apps. Dark times.)
 
